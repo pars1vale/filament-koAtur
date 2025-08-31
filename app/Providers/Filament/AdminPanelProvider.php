@@ -30,9 +30,18 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
-            // Resource Settings
+            
+            // Ordering Navigation Group
+            ->navigationGroups([
+                'Parties',
+                'Settings',
+            ])
+            // Settings Resource Path
             ->discoverResources(in: app_path('Filament/Resources/Settings'), for: 'App\\Filament\\Resources\\Settings')
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
+
+            // Parties Resource Path
+            ->discoverResources(in: app_path('Filament/Resources/Parties'), for: 'App\\Filament\\Resources\\Parties')
+
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
                 Pages\Dashboard::class,
