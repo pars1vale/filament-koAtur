@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Settings;
 
-use App\Filament\Resources\CurrenciesResource\Pages;
+use App\Filament\Resources\Settings\CurrenciesResource\Pages;
 use App\Filament\Resources\CurrenciesResource\RelationManagers;
 use App\Models\Settings\Currency;
 use Filament\Forms;

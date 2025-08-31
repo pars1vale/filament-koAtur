@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Filament\Resources\CurrenciesResource\Pages;
+namespace App\Filament\Resources\Settings\UnitsResource\Pages;
 
-use App\Filament\Resources\CurrenciesResource;
+use App\Filament\Resources\Settings\UnitsResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListCurrencies extends ListRecords
+class ListUnits extends ListRecords
 {
-    protected static string $resource = CurrenciesResource::class;
+    protected static string $resource = UnitsResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make()
             ->modal(true)
-            ->modalHeading('Create Currency')
+            ->modalHeading('Create Unit')
             ->modalWidth('md')
         ];
     }

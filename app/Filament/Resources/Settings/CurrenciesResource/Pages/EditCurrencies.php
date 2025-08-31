@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\CurrenciesResource\Pages;
+namespace App\Filament\Resources\Settings\CurrenciesResource\Pages;
 
-use App\Filament\Resources\CurrenciesResource;
+use App\Filament\Resources\Settings\CurrenciesResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 

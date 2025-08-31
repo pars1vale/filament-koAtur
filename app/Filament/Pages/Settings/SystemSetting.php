@@ -31,7 +31,11 @@ class SystemSettings extends Page
                 Forms\Components\TextInput::make('company_name')->label('Company Name')->required(),
                 Forms\Components\TextInput::make('company_email')->label('Company Email')->email(),
                 Forms\Components\TextInput::make('company_phone')->label('Company Phone'),
-                Forms\Components\FileUpload::make('site_logo')->label('Site Logo')->directory('logo'),
+                Forms\Components\FileUpload::make('site_logo')
+                    ->label('Site Logo')
+                    ->disk('public')
+                    ->directory('public')
+                    ->image(),
                 Forms\Components\Select::make('default_currency_id')
                     ->label('Default Currency')
                     ->options(Currency::pluck('currency_name', 'id'))
@@ -47,7 +51,9 @@ class SystemSettings extends Page
 
     public function save(): void
     {
-        \App\Models\Settings\Setting::updateOrCreate(['id' => 1], $this->form->getState());
+        $state = $this->form->getState();
+
+        \App\Models\Settings\Setting::updateOrCreate(['id' => 1], $state);
         Notification::make()
             ->title('Settings updated successfully!')
             ->success()
