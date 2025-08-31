@@ -6,6 +6,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -35,16 +36,20 @@ class AdminPanelProvider extends PanelProvider
             ->navigationGroups([
                 'Products',
                 'Parties',
+                'Expenses',
                 'Settings',
             ])
-            // Settings Resource Path
-            ->discoverResources(in: app_path('Filament/Resources/Settings'), for: 'App\\Filament\\Resources\\Settings')
+            // Products Resource Path
+            ->discoverResources(in: app_path('Filament/Resources/Products'), for: 'App\\Filament\\Resources\\Products')
 
             // Parties Resource Path
             ->discoverResources(in: app_path('Filament/Resources/Parties'), for: 'App\\Filament\\Resources\\Parties')
 
-            // Products Resource Path
-            ->discoverResources(in: app_path('Filament/Resources/Products'), for: 'App\\Filament\\Resources\\Products')
+            // Expense Resource Path
+            ->discoverResources(in: app_path('Filament/Resources/Expenses'), for: 'App\\Filament\\Resources\\Expenses')
+
+            // Settings Resource Path
+            ->discoverResources(in: app_path('Filament/Resources/Settings'), for: 'App\\Filament\\Resources\\Settings')
 
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
@@ -52,6 +57,16 @@ class AdminPanelProvider extends PanelProvider
 
                 // Custom Page for System Settings
                 \App\Filament\Pages\Settings\SystemSettings::class
+            ])
+
+
+            // Custom Navigation Create Expenses
+            ->navigationItems([
+                NavigationItem::make('Create Expense')
+                    ->url(fn() => \App\Filament\Resources\Expenses\ExpenseResource::getUrl('create'))
+                    ->icon('heroicon-o-plus-circle')
+                    ->group('Expenses')
+                    ->sort(2),
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
