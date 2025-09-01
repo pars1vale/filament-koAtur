@@ -24,6 +24,9 @@ class ExpenseResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
 
+    protected static ?string $slug = 'expenses';
+
+
     // Grouping to Expenses menu
     public static function getNavigationGroup(): ?string
     {
@@ -34,6 +37,20 @@ class ExpenseResource extends Resource
     public static function getNavigationSort(): ?int
     {
         return 3;
+    }
+
+    // create page custom navigation
+    public static function getNavigationItems(): array
+    {
+        return [
+            ...parent::getNavigationItems(),
+            \Filament\Navigation\NavigationItem::make()
+                ->label('Create Expense')
+                ->url(static::getUrl('create'))
+                ->icon('heroicon-o-document-text')
+                ->group('Expenses')
+                ->sort(2),
+        ];
     }
 
     public static function form(Form $form): Form

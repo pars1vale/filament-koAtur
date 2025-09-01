@@ -6,7 +6,6 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -38,6 +37,7 @@ class AdminPanelProvider extends PanelProvider
                 'Parties',
                 'Expenses',
                 'Settings',
+                'User Management',
             ])
             // Products Resource Path
             ->discoverResources(in: app_path('Filament/Resources/Products'), for: 'App\\Filament\\Resources\\Products')
@@ -51,23 +51,18 @@ class AdminPanelProvider extends PanelProvider
             // Settings Resource Path
             ->discoverResources(in: app_path('Filament/Resources/Settings'), for: 'App\\Filament\\Resources\\Settings')
 
+            // Users Resource Path
+            ->discoverResources(in: app_path('Filament/Resources/Users'), for: 'App\\Filament\\Resources\\Users')
+
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+
             ->pages([
                 Pages\Dashboard::class,
 
                 // Custom Page for System Settings
-                \App\Filament\Pages\Settings\SystemSettings::class
+                \App\Filament\Pages\Settings\SystemSetting::class
             ])
 
-
-            // Custom Navigation Create Expenses
-            ->navigationItems([
-                NavigationItem::make('Create Expense')
-                    ->url(fn() => \App\Filament\Resources\Expenses\ExpenseResource::getUrl('create'))
-                    ->icon('heroicon-o-plus-circle')
-                    ->group('Expenses')
-                    ->sort(2),
-            ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
@@ -83,6 +78,9 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+            ])
+            ->plugins([
+                \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
             ])
             ->authMiddleware([
                 Authenticate::class,

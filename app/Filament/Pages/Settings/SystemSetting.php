@@ -8,19 +8,39 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Forms\Form;
 
-class SystemSettings extends Page
+class SystemSetting extends Page
 {
     protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
     protected static ?string $navigationLabel = 'System Settings';
+
+    // add to settings navigation menu
     protected static ?string $navigationGroup = 'Settings';
-    protected static ?int $navigationSort = 99; // biar di bawah
+
+    // menu position
+    protected static ?int $navigationSort = 4;
+
+    // ambil view dari resource/view/
     protected static string $view = 'filament.pages.settings.setting';
+
+    // custom permission
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'update',
+        ];
+    }
+
+    // strict access
+    public static function canAccess(): bool
+    {
+        return auth()->user()->hasRole('super_admin');
+    }
 
     public ?array $data = [];
 
     public function mount(): void
     {
-        // Load dari database (misal tabel settings id=1)
         $this->form->fill(\App\Models\Settings\Setting::first()?->toArray() ?? []);
     }
 
