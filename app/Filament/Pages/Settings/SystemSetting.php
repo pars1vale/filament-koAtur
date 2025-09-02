@@ -54,8 +54,9 @@ class SystemSetting extends Page
                 Forms\Components\FileUpload::make('site_logo')
                     ->label('Site Logo')
                     ->disk('public')
-                    ->directory('public')
-                    ->image(),
+                    ->directory('logos')
+                    ->image()
+                    ->downloadable(),
                 Forms\Components\Select::make('default_currency_id')
                     ->label('Default Currency')
                     ->options(Currency::pluck('currency_name', 'id'))
