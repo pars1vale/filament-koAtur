@@ -35,12 +35,17 @@ class AdminPanelProvider extends PanelProvider
             // Ordering Navigation Group
             ->navigationGroups([
                 'Products',
+                'Purchases',
+                'Purchase Returns',
                 'Parties',
                 'Expenses',
                 'Settings',
             ])
             // Products Resource Path
             ->discoverResources(in: app_path('Filament/Resources/Products'), for: 'App\\Filament\\Resources\\Products')
+
+            // Purchases Resource Path
+            ->discoverResources(in: app_path('Filament/Resources/Purchases'), for: 'App\\Filament\\Resources\\Purchases')
 
             // Parties Resource Path
             ->discoverResources(in: app_path('Filament/Resources/Parties'), for: 'App\\Filament\\Resources\\Parties')
@@ -50,6 +55,7 @@ class AdminPanelProvider extends PanelProvider
 
             // Settings Resource Path
             ->discoverResources(in: app_path('Filament/Resources/Settings'), for: 'App\\Filament\\Resources\\Settings')
+
 
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
@@ -67,6 +73,18 @@ class AdminPanelProvider extends PanelProvider
                     ->icon('heroicon-o-plus-circle')
                     ->group('Expenses')
                     ->sort(2),
+
+                NavigationItem::make('Create Purchases')
+                    ->url(fn() => \App\Filament\Resources\Purchases\PurchaseResource::getUrl('create'))
+                    ->icon('heroicon-o-plus-circle')
+                    ->group('Purchases')
+                    ->sort(1),
+
+                NavigationItem::make('Create Purchase Returns')
+                    ->url(fn() => \App\Filament\Resources\Purchases\PurchaseReturnResource::getUrl('create'))
+                    ->icon('heroicon-o-plus-circle')
+                    ->group('Purchase Returns')
+                    ->sort(1),
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
