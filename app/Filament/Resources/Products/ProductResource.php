@@ -96,9 +96,11 @@ class ProductResource extends Resource
         ->schema([
             Section::make('Product Details')
                 ->schema([
-                    ViewEntry::make('barcode')
-                        ->view('infolists.products.barcode')
-                        ->getStateUsing(fn($record) => $record),
+                    // add view and print barcode
+                    // ViewEntry::make('barcode')
+                    //     ->view('infolists.products.barcode')
+                    //     ->getStateUsing(fn($record) => $record),
+                    // end, add view and print barcode
 
                     Grid::make(3)
                         ->schema([
