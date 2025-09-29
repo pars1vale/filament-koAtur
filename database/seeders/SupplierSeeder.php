@@ -15,7 +15,7 @@ class SupplierSeeder extends Seeder
     {
         DB::table('suppliers')->insert([
             [
-                'supplier_name' => 'PT Maju Jaya',
+                'supplier_name' => 'Test Supplier 1',
                 'supplier_email' => 'majujaya@example.com',
                 'supplier_phone' => '08123456789',
                 'city' => 'Jakarta',
@@ -25,9 +25,32 @@ class SupplierSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'supplier_name' => 'CV Sumber Makmur',
+                'supplier_name' => 'Test Supplier 2',
                 'supplier_email' => 'sumbermakmur@example.com',
                 'supplier_phone' => '082233445566',
+                'city' => 'Bandung',
+                'country' => 'Indonesia',
+                'address' => 'Jl. Asia Afrika No. 10, Bandung',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
+
+                DB::table('customers')->insert([
+            [
+                'customer_name' => 'Test Customer 1',
+                'customer_email' => 'majujaya@example.com',
+                'customer_phone' => '08123456789',
+                'city' => 'Jakarta',
+                'country' => 'Indonesia',
+                'address' => 'Jl. Sudirman No. 1, Jakarta',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'customer_name' => 'Test Customer 2',
+                'customer_email' => 'sumbermakmur@example.com',
+                'customer_phone' => '082233445566',
                 'city' => 'Bandung',
                 'country' => 'Indonesia',
                 'address' => 'Jl. Asia Afrika No. 10, Bandung',

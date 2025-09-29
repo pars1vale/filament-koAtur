@@ -45,7 +45,7 @@ class Purchase extends Model
 
         $this->saveQuietly();
     }
-    
+
     protected static function boot()
     {
         parent::boot();
