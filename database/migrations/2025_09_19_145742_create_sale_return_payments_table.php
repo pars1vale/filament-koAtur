@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('sale_return_payments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('outlet_id')->constrained('outlets')->cascadeOnDelete();
             $table->unsignedBigInteger('sale_return_id');
             $table->integer('amount');
             $table->date('date');

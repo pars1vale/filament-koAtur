@@ -2,15 +2,21 @@
 
 namespace App\Models\Settings;
 
+use App\Models\Outlet;
 use Illuminate\Database\Eloquent\Model;
 
 class Unit extends Model
 {
     protected $table = 'units';
     protected $fillable = [
-        'name', 
-        'short_name', 
-        'operator', 
+        'name',
+        'short_name',
+        'operator',
         'operation_value'
     ];
+
+    public function outlet()
+    {
+        return $this->belongsTo(Outlet::class);
+    }
 }

@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('sale_return_details', function (Blueprint $table) {
-           $table->id();
+            $table->id();
+            $table->foreignId('outlet_id')->constrained('outlets')->cascadeOnDelete();
             $table->unsignedBigInteger('sale_return_id');
             $table->unsignedBigInteger('product_id')->nullable();
             $table->string('product_code');

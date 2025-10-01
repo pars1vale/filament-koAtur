@@ -26,6 +26,11 @@ class UserResource extends Resource
         return 'User Management';
     }
 
+        public static function isScopedToTenant(): bool
+    {
+        return false;
+    }
+
     public static function form(Form $form): Form
     {
         return $form

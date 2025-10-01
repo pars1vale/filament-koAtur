@@ -26,6 +26,7 @@ class RoleResource extends Resource implements HasShieldPermissions
     protected static ?string $recordTitleAttribute = 'name';
 
 
+
     public static function getNavigationGroup(): ?string
     {
         return 'User Management';
@@ -216,7 +217,8 @@ class RoleResource extends Resource implements HasShieldPermissions
 
     public static function isScopedToTenant(): bool
     {
-        return Utils::isScopedToTenant();
+        // return Utils::isScopedToTenant();
+        return false;
     }
 
     public static function canGloballySearch(): bool

@@ -2,6 +2,7 @@
 
 namespace App\Models\Sales;
 
+use App\Models\Outlet;
 use App\Models\Sales\Sale;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,6 +23,10 @@ class SalePayment extends Model
         return $this->belongsTo(Sale::class);
     }
 
+    public function outlet()
+    {
+        return $this->belongsTo(Outlet::class);
+    }
     protected static function booted()
     {
         // Saat payment baru dibuat

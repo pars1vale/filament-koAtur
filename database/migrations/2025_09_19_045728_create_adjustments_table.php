@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('adjustments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('outlet_id')->constrained('outlets')->cascadeOnDelete();
             $table->date('date');
             $table->string('reference')->unique();
             $table->text('note')->nullable();

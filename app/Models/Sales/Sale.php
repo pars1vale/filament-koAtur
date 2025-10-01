@@ -2,6 +2,7 @@
 
 namespace App\Models\Sales;
 
+use App\Models\Outlet;
 use App\Models\Parties\Customer;
 use App\Models\Sales\SalePayment;
 use Illuminate\Database\Eloquent\Model;
@@ -117,5 +118,10 @@ class Sale extends Model
     public function sale_payments()
     {
         return $this->hasMany(SalePayment::class);
+    }
+
+    public function outlet()
+    {
+        return $this->belongsTo(Outlet::class);
     }
 }

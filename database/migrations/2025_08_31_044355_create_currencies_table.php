@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('currencies', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('outlet_id')->constrained('outlets')->cascadeOnDelete();
             $table->string('currency_name');
             $table->string('code');
             $table->string('symbol');

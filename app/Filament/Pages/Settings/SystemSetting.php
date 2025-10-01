@@ -27,6 +27,7 @@ class SystemSettings extends Page
         $this->form->fill(\App\Models\Settings\Setting::first()?->toArray() ?? []);
     }
 
+
     public function form(Form $form): Form
     {
         return $form

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('expense_categories', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('outlet_id')->constrained('outlets')->cascadeOnDelete();
             $table->string('category_name');
             $table->text('category_description')->nullable();
             $table->timestamps();

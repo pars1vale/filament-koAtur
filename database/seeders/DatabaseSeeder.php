@@ -21,11 +21,13 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
-            CurrencySeeder::class,
-            UnitSeeder::class,
-            SupplierSeeder::class,
-            CategorySeeder::class,
+            // CurrencySeeder::class,
+            // UnitSeeder::class,
+            // SupplierSeeder::class,
+            // CategorySeeder::class,
+            OutletSeeder::class,
             RoleSeeder::class,
+            AssignOutletSeeder::class
         ]);
     }
 }

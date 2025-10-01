@@ -40,28 +40,29 @@ class PrintBarcode extends Page implements HasForms, HasTable
                 ->label('Search Product')
                 ->searchable()
                 ->live()
-                ->getSearchResultsUsing(fn (string $query) =>
+                ->getSearchResultsUsing(
+                    fn(string $query) =>
                     Product::query()
                         ->where('product_name', 'like', "%{$query}%")
                         ->orWhere('product_code', 'like', "%{$query}%")
                         ->limit(10)
                         ->pluck('product_name', 'id')
                 )
-                ->getOptionLabelUsing(fn ($value): ?string => Product::find($value)?->product_name),
+                ->getOptionLabelUsing(fn($value): ?string => Product::find($value)?->product_name),
 
-                Forms\Components\TextInput::make('barcode_qty')
-                    ->label('Number of Barcodes')
-                    ->numeric()
-                    ->default(1)
-                    ->minValue(1)
-                    ->required(),
+            Forms\Components\TextInput::make('barcode_qty')
+                ->label('Number of Barcodes')
+                ->numeric()
+                ->default(1)
+                ->minValue(1)
+                ->required(),
         ];
     }
 
     protected function getTableQuery()
     {
         return Product::query()
-            ->when($this->product_id, fn ($q) => $q->where('id', $this->product_id));
+            ->when($this->product_id, fn($q) => $q->where('id', $this->product_id));
     }
 
     protected function getTableColumns(): array
@@ -86,7 +87,7 @@ class PrintBarcode extends Page implements HasForms, HasTable
         ]);
 
         return Response::streamDownload(
-            fn () => print($pdf->output()),
+            fn() => print($pdf->output()),
             'barcode-' . $product->product_code . '.pdf'
         );
     }

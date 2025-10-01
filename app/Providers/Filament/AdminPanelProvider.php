@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Models\Outlet;
 use Filament\Http\Middleware\Authenticate;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -67,7 +68,10 @@ class AdminPanelProvider extends PanelProvider
                 Pages\Dashboard::class,
 
                 // Custom Page for System Settings
-                \App\Filament\Pages\Settings\SystemSettings::class
+                \App\Filament\Pages\Settings\SystemSettings::class,
+                // Custom Page Stock Adjustment
+                \App\Filament\Pages\AdjustStock::class
+
             ])
 
 
@@ -130,6 +134,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
-            ]);
+            ])
+            ->tenant(Outlet::class);
     }
 }

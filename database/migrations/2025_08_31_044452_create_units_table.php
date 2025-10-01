@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('outlet_id')->constrained('outlets')->cascadeOnDelete();
             $table->string('name')->nullable();
             $table->string('short_name')->nullable();
             $table->string('operator')->nullable();

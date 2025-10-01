@@ -54,6 +54,12 @@ class RoleSeeder extends Seeder
             // Users permissions
             'view_any_users::role', 'view_users::role', 'create_users::role', 'update_users::role', 'delete_users::role', 'delete_any_users::role',
             'view_any_users::user', 'view_users::user', 'create_users::user', 'update_users::user', 'delete_users::user', 'delete_any_users::user', 'force_delete_users::user', 'force_delete_any_users::user', 'restore_users::user', 'restore_any_users::user', 'replicate_users::user', 'reorder_users::user',
+
+            // Stock Adjustment permissions
+            'view_any_products::adjustment', 'view_products::adjustment', 'create_products::adjustment', 'update_products::adjustment', 'delete_products::adjustment', 'force_delete_products::adjustment', 'force_delete_any_products::adjustment',
+
+            // Outlets permissions
+            'view_any_outlets::outlet', 'view_outlets::outlet', 'create_outlets::outlet', 'update_outlets::outlet', 'delete_outlets::outlet','delete_any_outlets::outlet', 'delete_any_outlets::outlet', 'force_delete_outlets::outlet', 'force_delete_any_outlets::outlet'
         ];
 
         foreach ($permissions as $permission) {

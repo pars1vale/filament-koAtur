@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('outlet_id')->constrained('outlets')->cascadeOnDelete();
             $table->date('date');
             $table->string('reference');
             $table->unsignedBigInteger('supplier_id')->nullable();

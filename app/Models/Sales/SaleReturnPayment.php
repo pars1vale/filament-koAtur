@@ -2,6 +2,7 @@
 
 namespace App\Models\Sales;
 
+use App\Models\Outlet;
 use Illuminate\Database\Eloquent\Model;
 
 class SaleReturnPayment extends Model
@@ -33,5 +34,10 @@ class SaleReturnPayment extends Model
         static::deleted(function ($payment) {
             $payment->sale_return?->recalculatePayment();
         });
+    }
+
+    public function outlet()
+    {
+        return $this->belongsTo(Outlet::class);
     }
 }

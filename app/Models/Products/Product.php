@@ -2,6 +2,7 @@
 
 namespace App\Models\Products;
 
+use App\Models\Outlet;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Settings\Unit;
@@ -37,4 +38,8 @@ class Product extends Model
         return $this->belongsTo(Unit::class);
     }
 
+    public function outlet()
+    {
+        return $this->belongsTo(Outlet::class);
+    }
 }
