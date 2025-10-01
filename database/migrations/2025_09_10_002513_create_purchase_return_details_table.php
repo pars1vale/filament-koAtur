@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('purchase_return_details', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('outlet_id')->constrained('outlets')->cascadeOnDelete();
             $table->unsignedBigInteger('purchase_return_id');
             $table->unsignedBigInteger('product_id')->nullable();
             $table->string('product_code');

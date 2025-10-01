@@ -2,6 +2,7 @@
 
 namespace App\Models\Purchases;
 
+use App\Models\Outlet;
 use Illuminate\Database\Eloquent\Model;
 
 class PurchasePayment extends Model
@@ -19,6 +20,11 @@ class PurchasePayment extends Model
     public function purchase()
     {
         return $this->belongsTo(Purchase::class);
+    }
+
+    public function outlet()
+    {
+        return $this->belongsTo(Outlet::class);
     }
 
     protected static function booted()

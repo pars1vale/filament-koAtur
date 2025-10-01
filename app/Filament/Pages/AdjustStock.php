@@ -25,20 +25,23 @@ class AdjustStock extends Page implements Forms\Contracts\HasForms
     public $reference;
     public $adjustment_date;
 
+
+
     protected function getFormSchema(): array
     {
         return [
             Forms\Components\Select::make('product_id')
                 ->label('Search Product')
                 ->searchable()
-                ->getSearchResultsUsing(fn (string $query) =>
+                ->getSearchResultsUsing(
+                    fn(string $query) =>
                     Product::query()
                         ->where('product_name', 'like', "%{$query}%")
                         ->orWhere('product_code', 'like', "%{$query}%")
                         ->limit(10)
                         ->pluck('product_name', 'id')
                 )
-                ->getOptionLabelUsing(fn ($value): ?string => Product::find($value)?->product_name)
+                ->getOptionLabelUsing(fn($value): ?string => Product::find($value)?->product_name)
                 ->reactive()
                 ->afterStateUpdated(function ($state) {
                     $product = Product::find($state);
@@ -53,31 +56,31 @@ class AdjustStock extends Page implements Forms\Contracts\HasForms
                         ];
                     }
                 }),
-                Forms\Components\Group::make([
-                    Forms\Components\TextInput::make('reference')
-                        ->label('Reference Code')
-                        ->disabled()
-                        ->default(function () {
-                            $lastAdjustment = Adjustment::orderBy('id', 'desc')->first();
-                            $lastNumber = 0;
+            Forms\Components\Group::make([
+                Forms\Components\TextInput::make('reference')
+                    ->label('Reference Code')
+                    ->disabled()
+                    ->default(function () {
+                        $lastAdjustment = Adjustment::orderBy('id', 'desc')->first();
+                        $lastNumber = 0;
 
-                            if ($lastAdjustment) {
-                                $lastNumber = (int) str_replace('ADJ-', '', $lastAdjustment->reference);
-                            }
+                        if ($lastAdjustment) {
+                            $lastNumber = (int) str_replace('ADJ-', '', $lastAdjustment->reference);
+                        }
 
-                            $newNumber = str_pad($lastNumber + 1, 5, '0', STR_PAD_LEFT);
+                        $newNumber = str_pad($lastNumber + 1, 5, '0', STR_PAD_LEFT);
 
-                            return 'ADJ-' . $newNumber;
-                        }), 
+                        return 'ADJ-' . $newNumber;
+                    }),
 
-                    Forms\Components\DatePicker::make('adjustment_date')
-                        ->label('Date')
-                        ->default(now())
-                        ->required()
-                        ->native(false),
-                ])
-                    ->columns(2),
-                ];
+                Forms\Components\DatePicker::make('adjustment_date')
+                    ->label('Date')
+                    ->default(now())
+                    ->required()
+                    ->native(false),
+            ])
+                ->columns(2),
+        ];
     }
 
     public function removeItem($index)

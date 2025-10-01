@@ -4,6 +4,7 @@ namespace App\Models\Expenses;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Expenses\Expense;
+use App\Models\Outlet;
 
 class Category extends Model
 {
@@ -16,5 +17,10 @@ class Category extends Model
     public function expenses()
     {
         return $this->hasMany(Expense::class, 'category_id');
+    }
+
+        public function outlet()
+    {
+        return $this->belongsTo(Outlet::class);
     }
 }

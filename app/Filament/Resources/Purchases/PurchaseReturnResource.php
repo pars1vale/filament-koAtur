@@ -28,7 +28,7 @@ class PurchaseReturnResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-arrow-turn-down-right';
 
-    protected static ?string $navigationGroup = 'Purchase Returns';
+    protected static ?string $navigationGroup = 'Purchases Return';
     protected static ?int $navigationSort = 1;
 
 
@@ -249,7 +249,7 @@ class PurchaseReturnResource extends Resource
                             ->afterStateUpdated(function ($state, $set, $get) {
                                 self::calculateDue($set, $get);
                             })
-                            
+
                     ])
                     ->collapsible()
                     ->collapsed(false),
@@ -289,9 +289,9 @@ class PurchaseReturnResource extends Resource
                 Select::make('payment_status')
                     ->label('Payment Status')
                     ->options([
-                        'pending'   => 'Pending',
-                        'completed' => 'Completed',
-                        'cancelled' => 'Cancelled',
+                        'unpaid'   => 'Unpaid',
+                        'paid' => 'Paid',
+                        'partial' => 'Partial',
                     ])
                     ->default('pending')
                     ->required(),

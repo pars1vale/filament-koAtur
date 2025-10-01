@@ -19,10 +19,17 @@ class CurrenciesResource extends Resource
     protected static ?string $model = Currency::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
+
     protected static ?string $navigationGroup = 'Settings';
+
     public static function getNavigationSort(): ?int
     {
         return 1;
+    }
+
+        public static function isScopedToTenant(): bool
+    {
+        return false;
     }
 
     public static function form(Form $form): Form

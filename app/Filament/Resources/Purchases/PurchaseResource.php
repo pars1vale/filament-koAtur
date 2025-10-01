@@ -275,9 +275,9 @@ class PurchaseResource extends Resource
                 Select::make('payment_status')
                     ->label('Payment Status')
                     ->options([
-                        'pending'   => 'Pending',
-                        'completed' => 'Completed',
-                        'cancelled' => 'Cancelled',
+                        'unpaid'   => 'Unpaid',
+                        'paid' => 'Paid',
+                        'partial' => 'Partial',
                     ])
                     ->default('pending')
                     ->required(),
@@ -329,9 +329,9 @@ class PurchaseResource extends Resource
                 TextColumn::make('supplier.supplier_name')->searchable(),
                 TextColumn::make('date'),
                 TextColumn::make('status'),
-                TextColumn::make('paid_amount'),
-                TextColumn::make('total_amount'),
-                TextColumn::make('due_amount'),
+                TextColumn::make('paid_amount')->money('idr'),
+                TextColumn::make('total_amount')->money('idr'),
+                TextColumn::make('due_amount')->money('idr'),
 
             ])
             ->filters([

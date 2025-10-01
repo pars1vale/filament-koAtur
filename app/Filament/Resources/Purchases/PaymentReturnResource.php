@@ -24,7 +24,7 @@ class PaymentReturnResource extends Resource
     protected static ?string $model = PurchaseReturnPayment::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-wallet';
-    protected static ?string $navigationGroup = 'Purchase Returns';
+    protected static ?string $navigationGroup = 'Purchases Return';
     protected static ?int $navigationSort = 2;
 
     protected static ?string $modelLabel = 'Return Payment';

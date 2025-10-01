@@ -4,16 +4,19 @@ namespace App\Filament\Pages\Settings;
 
 use Filament\Forms;
 use App\Models\Settings\Currency;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Forms\Form;
 
 class SystemSettings extends Page
 {
+    use HasPageShield;
+
     protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
     protected static ?string $navigationLabel = 'System Settings';
     protected static ?string $navigationGroup = 'Settings';
-    protected static ?int $navigationSort = 99; // biar di bawah
+    protected static ?int $navigationSort = 5;
     protected static string $view = 'filament.pages.settings.setting';
 
     public ?array $data = [];
@@ -23,6 +26,7 @@ class SystemSettings extends Page
         // Load dari database (misal tabel settings id=1)
         $this->form->fill(\App\Models\Settings\Setting::first()?->toArray() ?? []);
     }
+
 
     public function form(Form $form): Form
     {

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('adjusted_products', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('outlet_id')->constrained('outlets')->cascadeOnDelete();
             $table->unsignedBigInteger('adjustment_id');
             $table->unsignedBigInteger('product_id');
             $table->integer('quantity');

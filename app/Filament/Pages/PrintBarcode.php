@@ -11,11 +11,12 @@ use Filament\Tables;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Barryvdh\DomPDF\Facade\Pdf;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Illuminate\Support\Facades\Response;
 
 class PrintBarcode extends Page implements HasForms, HasTable
 {
-    use InteractsWithForms, InteractsWithTable;
+    use InteractsWithForms, InteractsWithTable, HasPageShield;
 
     protected static string $view = 'filament.pages.print-barcode';
 

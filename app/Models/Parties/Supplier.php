@@ -2,6 +2,7 @@
 
 namespace App\Models\Parties;
 
+use App\Models\Outlet;
 use Illuminate\Database\Eloquent\Model;
 
 class Supplier extends Model
@@ -15,4 +16,9 @@ class Supplier extends Model
         'country',
         'address'
     ];
+
+    public function outlet()
+    {
+        return $this->belongsTo(Outlet::class);
+    }
 }
