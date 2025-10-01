@@ -26,6 +26,7 @@ class PrintBarcode extends Page implements HasForms, HasTable
 
     public ?int $product_id = null;
     public ?int $barcode_qty = 1;
+    public array $items = [];
 
     public function mount(): void
     {
@@ -38,7 +39,6 @@ class PrintBarcode extends Page implements HasForms, HasTable
             Forms\Components\Select::make('product_id')
                 ->label('Search Product')
                 ->searchable()
-                ->live()
                 ->getSearchResultsUsing(fn (string $query) =>
                     Product::query()
                         ->where('product_name', 'like', "%{$query}%")
@@ -46,21 +46,26 @@ class PrintBarcode extends Page implements HasForms, HasTable
                         ->limit(10)
                         ->pluck('product_name', 'id')
                 )
-                ->getOptionLabelUsing(fn ($value): ?string => Product::find($value)?->product_name),
+                ->getOptionLabelUsing(fn ($value): ?string => Product::find($value)?->product_name)
+                ->reactive()
+                ->afterStateUpdated(function ($state) {
+                    $product = Product::find($state);
 
-                Forms\Components\TextInput::make('barcode_qty')
-                    ->label('Number of Barcodes')
-                    ->numeric()
-                    ->default(1)
-                    ->minValue(1)
-                    ->required(),
+                    if ($product && !collect($this->items)->pluck('id')->contains($product->id)) {
+                        $this->items[] = [
+                            'id' => $product->id,
+                            'name' => $product->product_name,
+                            'code' => $product->product_code,
+                            'quantity' => 1,
+                        ];
+                    }
+                }),
         ];
     }
 
     protected function getTableQuery()
     {
-        return Product::query()
-            ->when($this->product_id, fn ($q) => $q->where('id', $this->product_id));
+        return Product::query()->whereIn('id', collect($this->items)->pluck('id'));
     }
 
     protected function getTableColumns(): array
@@ -71,22 +76,38 @@ class PrintBarcode extends Page implements HasForms, HasTable
         ];
     }
 
+    public function removeItem($id): void
+    {
+        $this->items = array_values(array_filter($this->items, fn ($item) => $item['id'] !== $id));
+    }
+
     public function generateBarcode()
     {
-        $product = Product::find($this->product_id);
+        $products = [];
 
-        if (!$product) {
+        foreach ($this->items as $item) {
+            $product = Product::find($item['id']);
+            if ($product) {
+                $products[] = [
+                    'product' => $product,
+                    'barcode_qty' => $item['quantity'],
+                ];
+            }
+        }
+
+        if (empty($products)) {
             return;
         }
 
         $pdf = Pdf::loadView('filament.resources.views.pdf.barcode', [
-            'product' => $product,
-            'qty' => $this->barcode_qty,
+            'products' => $products,
         ]);
 
+        $filename = 'barcode_' . now()->format('dmYHis') . '.pdf';
+        
         return Response::streamDownload(
             fn () => print($pdf->output()),
-            'barcode-' . $product->product_code . '.pdf'
+            $filename
         );
     }
 }

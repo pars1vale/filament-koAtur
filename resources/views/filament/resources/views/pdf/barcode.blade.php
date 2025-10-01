@@ -12,25 +12,28 @@
         .barcode {
             display: inline-block;
             margin: 10px;
-            padding: 5px;
-            padding-left: 10px;
-            padding-right: 10px;
+            padding: 5px 10px;
             text-align: center;
-            background-color: aqua
+            background-color: #0be3ff;
+        }
+
+        .product-section {
+            page-break-inside: avoid;
+            margin-bottom: 30px;
         }
     </style>
 </head>
 
 <body>
-    <div>
-        @for ($i = 0; $i < $qty; $i++)
+    @foreach ($products as $item)
+        @for ($i = 0; $i < $item['barcode_qty']; $i++)
             <div class="barcode">
-                <div>{{ $product->product_name }}</div>
-                {!! DNS1D::getBarcodeHTML($product->product_code, 'EAN13', 2, 50) !!}
-                <div>{{ $product->product_code }}</div>
+                <div>{{ $item['product']->product_name }}</div>
+                {!! DNS1D::getBarcodeHTML($item['product']->product_code, 'EAN13', 2, 50) !!}
+                <div>{{ $item['product']->product_code }}</div>
             </div>
         @endfor
-    </div>
+    @endforeach
 </body>
 
 </html>

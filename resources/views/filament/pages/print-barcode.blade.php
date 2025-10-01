@@ -3,28 +3,44 @@
         {{ $this->form }}
     </div>
 
-    @if ($this->product_id)
-        <div>
-            <table class="table-auto w-full mt-2 border border-gray-300 text-sm md:border-spacing-2 outline-none">
-                <thead>
+    <div>
+        <table class="table-auto w-full mt-2 border border-gray-300 text-sm">
+            <thead>
+                <tr>
+                    <th class="border px-4 py-2">Product Name</th>
+                    <th class="border px-4 py-2">Product Code</th>
+                    <th class="border px-4 py-2">Number of Barcodes</th>
+                    <th class="border px-4 py-2">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($items as $item)
                     <tr>
-                        <th class="border px-4 py-2"> Product Name</th>
-                        <th class="border px-4 py-2"> Product Code</th>
+                        <td class="border px-4 py-2">{{ $item['name'] }}</td>
+                        <td class="border px-4 py-2">{{ $item['code'] }}</td>
+                        <td class="border px-4 py-2">
+                            <input type="number" wire:model.defer="items.{{ $loop->index }}.quantity" min="1"
+                                class="w-full h-10 dark:bg-gray-800 dark:border-gray-600 rounded-lg" />
+                        </td>
+                        <td class="border px-4 py-2 text-center">
+                            <button type="button" wire:click="removeItem({{ $item['id'] }})" title="Remove"
+                                class="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg">
+                                @svg('heroicon-o-trash', 'w-5 h-5')
+                            </button>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @php
-                        $product = \App\Models\Products\Product::find($product_id);
-                    @endphp
+                @empty
+                    <tr>
+                        <td colspan="4" class="text-center py-4 text-gray-500 dark:text-gray-400">
+                            No products added yet.
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 
-                    @if ($product)
-                        <td class="border px-4 py-2">{{ $product->product_name }}</td>
-                        <td class="border px-4 py-2">{{ $product->product_code }}</td>
-                    @endif
-                </tbody>
-            </table>
-        </div>
-
+    @if (count($items) > 0)
         <div class="mt-4">
             <form wire:submit.prevent="generateBarcode">
                 <x-filament::button type="submit" icon="heroicon-o-printer">
