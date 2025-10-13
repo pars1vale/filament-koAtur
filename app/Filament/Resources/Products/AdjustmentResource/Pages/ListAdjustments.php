@@ -4,7 +4,9 @@ namespace App\Filament\Resources\Products\AdjustmentResource\Pages;
 
 use App\Filament\Resources\Products\AdjustmentResource;
 use Filament\Actions;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Support\Facades\Auth;
 
 class ListAdjustments extends ListRecords
 {
@@ -13,7 +15,10 @@ class ListAdjustments extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Action::make('create')
+                ->label('Create Adjustment')
+                ->icon('heroicon-o-plus')
+                ->url(fn() => url('/admin/' . Auth::user()->outlets()->first()->id . '/adjust-stock'))
         ];
     }
 }

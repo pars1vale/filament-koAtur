@@ -29,6 +29,10 @@ class PaymentReturnResource extends Resource
 
     protected static ?string $modelLabel = 'Return Payment';
 
+    // protected static ?string $tenantRelationshipName = 'purchases_return_payment';
+    protected static ?string $tenantRelationshipName = 'purchases_return_payment';
+    // protected static ?string $tenantOwnershipRelationshipName = 'outlet';
+
     public static function form(Form $form): Form
     {
         return $form

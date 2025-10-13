@@ -4,14 +4,10 @@ namespace App\Filament\Resources\Sales;
 
 use App\Filament\Resources\Sales\SaleReturnPaymentResource\Pages;
 use App\Filament\Resources\Sales\SaleReturnPaymentResource\RelationManagers;
-use App\Models\Products\Product;
 use App\Models\Sales\SaleReturn;
 use App\Models\Sales\SaleReturnPayment;
 use Filament\Forms;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Section;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -27,176 +23,53 @@ class SaleReturnPaymentResource extends Resource
 {
     protected static ?string $model = SaleReturnPayment::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+    protected static ?string $navigationIcon = 'heroicon-o-credit-card';
     protected static ?string $navigationGroup = 'Sales Return';
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 2;
+
+    protected static ?string $modelLabel = 'Return Payment';
+    protected static ?string $tenantRelationshipName = 'sales_return_payment';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                TextInput::make('reference')
-                    ->label('Reference')
-                    ->readOnly()
-                    ->dehydrated(true)
-                    ->placeholder(function () {
-                        $lastId = SaleReturn::max('id') ?? 0;
-                        $nextId = $lastId + 1;
-                        return 'SR' . str_pad($nextId, 4, '0', STR_PAD_LEFT);
+                Select::make('sale_return_id')
+                    ->label('Sale Return')
+                    ->searchable()
+                    ->preload()
+                    ->relationship('sale_return', 'reference')
+                    ->required()
+                    ->reactive()
+                    ->afterStateUpdated(function ($state, $set) {
+                        if ($state) {
+                            $saleReturn = SaleReturn::find($state);
+                            $set('reference', 'PYR/' . $saleReturn?->reference);
+                            if ($saleReturn) {
+                                $set('amount', $saleReturn->due_amount);
+                            }
+                        } else {
+                            $set('reference', null);
+                            $set('amount', 0);
+                        }
                     }),
 
-                Select::make('customer_id')
-                    ->label('Customer')
-                    ->relationship('customer', 'customer_name')
-                    ->required(),
-
-                DateTimePicker::make('date')
-                    ->default(now())
+                TextInput::make('amount')
+                    ->numeric()
                     ->required()
-                    ->label('Purchase Date'),
+                    ->minValue(0)
+                    ->reactive(),
 
-                Section::make('Product Details')
-                    ->schema([
-                        Repeater::make('details')
-                            ->relationship('product_details')
-                            ->reactive()
-                            ->schema([
-                                Hidden::make('id'),
+                DatePicker::make('date')
+                    ->required()
+                    ->default(now()),
 
-                                Select::make('product_id')
-                                    ->relationship('product', 'product_name')
-                                    ->preload()
-                                    ->searchable()
-                                    ->required()
-                                    ->reactive()
-                                    ->afterStateUpdated(function ($state, callable $set, callable $get) {
-                                        $product = Product::find($state);
-                                        if ($product) {
-                                            $set('product_code', $product->product_code);
-                                            $set('unit_price', $product->product_price);
-                                            $set('product_tax_amount', 0);
-                                            $set('product_discount_amount', 0);
-                                            $set('product_discount_type', 'percent');
-
-                                            $item     = $get();
-                                            $subTotal = self::calculateProductSubtotal($item, $set, $product);
-                                            $set('sub_total', $subTotal);
-                                        }
-                                        self::calculateDue($set, $get);
-                                    }),
-
-                                TextInput::make('product_code')
-                                    ->label('Product Code')
-                                    ->readOnly(),
-
-                                TextInput::make('quantity')
-                                    ->numeric()
-                                    ->default(1)
-                                    ->required()
-                                    ->reactive()
-                                    ->afterStateUpdated(function ($state, callable $set, $get) {
-                                        $product   = Product::find($get('product_id'));
-                                        $item      = $get();
-                                        $subTotal  = self::calculateProductSubtotal($item, $set, $product);
-                                        $set('sub_total', $subTotal);
-                                        self::calculateDue($set, $get);
-                                    }),
-
-                                TextInput::make('unit_price')
-                                    ->numeric()
-                                    ->required()
-                                    ->readOnly()
-                                    ->default(0),
-
-                                TextInput::make('product_discount_amount')
-                                    ->label('Discount')
-                                    ->numeric()
-                                    ->default(0)
-                                    ->live()
-                                    ->afterStateUpdated(function ($state, callable $set, $get) {
-                                        $product   = Product::find($get('product_id'));
-                                        $item      = $get();
-                                        $subTotal  = self::calculateProductSubtotal($item, $set, $product);
-                                        $set('sub_total', $subTotal);
-                                        self::calculateDue($set, $get);
-                                    }),
-
-                                Select::make('product_discount_type')
-                                    ->options([
-                                        'fixed'   => 'Fixed',
-                                        'percent' => 'Percent',
-                                    ])
-                                    ->default('percent')
-                                    ->dehydrated(),
-
-                                TextInput::make('product_tax_amount')
-                                    ->label('Tax Amount')
-                                    ->numeric()
-                                    ->default(0)
-                                    ->readOnly()
-                                    ->dehydrated(true),
-
-                                TextInput::make('sub_total')
-                                    ->numeric()
-                                    ->default(0)
-                                    ->readOnly()
-                                    ->dehydrated(true)
-                                    ->columnSpanFull(),
-                            ])
-                            ->columns(3)
-                            ->addActionLabel('Add Product')
-                            ->afterStateUpdated(function ($state, $set, $get) {
-                                self::calculateDue($set, $get);
-                            })
-                    ])
-                    ->collapsible()
-                    ->collapsed(false),
-
-                TextInput::make('tax_percentage')
-                    ->numeric()
-                    ->default(0)
-                    ->live()
-                    ->afterStateUpdated(fn($state, $set, $get) => self::calculateDue($set, $get)),
-
-                TextInput::make('tax_amount')
-                    ->numeric()
-                    ->readOnly()
-                    ->dehydrated(true),
-
-                TextInput::make('discount_percentage')
-                    ->numeric()
-                    ->default(0)
-                    ->live()
-                    ->afterStateUpdated(fn($state, $set, $get) => self::calculateDue($set, $get)),
-
-                TextInput::make('discount_amount')
-                    ->numeric()
-                    ->readOnly()
-                    ->dehydrated(true),
-
-                Select::make('status')
-                    ->label('Status')
-                    ->options([
-                        'pending'   => 'Pending',
-                        'completed' => 'Completed',
-                        'cancelled' => 'Cancelled',
-                    ])
-                    ->default('pending')
-                    ->required(),
-
-                Select::make('payment_status')
-                    ->label('Payment Status')
-                    ->options([
-                        'pending'   => 'Pending',
-                        'completed' => 'Completed',
-                        'cancelled' => 'Cancelled',
-                    ])
-                    ->default('pending')
-                    ->required(),
+                TextInput::make('reference')
+                    ->label('Payment Reference')
+                    ->reactive()
+                    ->dehydrated(),
 
                 Select::make('payment_method')
-                    ->label('Payment Method')
                     ->options([
                         'cash'        => 'Cash',
                         'credit_card' => 'Credit Card',
@@ -207,30 +80,9 @@ class SaleReturnPaymentResource extends Resource
                     ->default('cash')
                     ->required(),
 
-                TextInput::make('total_amount')
-                    ->label('Total Amount')
-                    ->numeric()
-                    ->readOnly()
-                    ->dehydrated(true)
-                    ->reactive(),
-
-                TextInput::make('paid_amount')
-                    ->numeric()
-                    ->label('Paid Amount')
-                    ->required()
-                    ->default(0)
-                    ->live(debounce: 500)
-                    ->afterStateUpdated(fn($state, $set, $get) => self::calculateDue($set, $get)),
-
-                TextInput::make('due_amount')
-                    ->label('Due Amount')
-                    ->numeric()
-                    ->readOnly()
-                    ->reactive()
-                    ->dehydrated(true),
-
                 Textarea::make('note')
-                    ->nullable(),
+                    ->nullable()
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -240,7 +92,8 @@ class SaleReturnPaymentResource extends Resource
             ->columns([
                 TextColumn::make('id')->sortable(),
                 TextColumn::make('reference')->searchable(),
-                TextColumn::make('sale_return.reference')->label('Sale')->sortable()->searchable(),
+                TextColumn::make('sale_return.reference')->label('Sale Return')->sortable()->searchable(),
+                TextColumn::make('sale_return.customer.customer_name')->label('Customer')->searchable(),
                 TextColumn::make('amount')->money('idr', true),
                 TextColumn::make('payment_method')->badge(),
                 TextColumn::make('date')->date(),
@@ -250,6 +103,7 @@ class SaleReturnPaymentResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

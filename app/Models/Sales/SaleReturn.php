@@ -4,6 +4,7 @@ namespace App\Models\Sales;
 
 use App\Models\Outlet;
 use App\Models\Parties\Customer;
+use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
 
 class SaleReturn extends Model
@@ -12,6 +13,7 @@ class SaleReturn extends Model
 
     protected $fillable = [
         'id',
+        'outlet_id',
         'date',
         'reference',
         'customer_id',
@@ -37,11 +39,11 @@ class SaleReturn extends Model
 
         // Auto set payment status
         if ($this->due_amount == 0 && $this->paid_amount > 0) {
-            $this->payment_status = 'completed';
+            $this->payment_status = 'paid';
         } elseif ($this->paid_amount > 0 && $this->due_amount > 0) {
-            $this->payment_status = 'pending';
+            $this->payment_status = 'partial';
         } else {
-            $this->payment_status = 'cancelled';
+            $this->payment_status = 'unpaid';
         }
 
         $this->saveQuietly();
@@ -67,15 +69,25 @@ class SaleReturn extends Model
 
             // Set due
             $model->due_amount = $model->total_amount - $model->paid_amount;
+
+            // set outlet_id ke active_tenant
+            if (empty($model->outlet_id)) {
+                $model->outlet_id = Filament::getTenant()?->id;
+            }
         });
 
         // Saat update record
         static::updating(function ($model) {
+            // Set outlet_id jika kosong
+            if (empty($model->outlet_id)) {
+                $model->outlet_id = Filament::getTenant()?->id;
+            }
+
             // Cek perubahan status
             $oldStatus = $model->getOriginal('status');
             $newStatus = $model->status;
 
-            // Kalau status baru jadi completed → tambah stok
+            // Kalau status baru jadi completed → tambah stok (karena return penjualan)
             if ($oldStatus !== 'completed' && $newStatus === 'completed') {
                 foreach ($model->product_details as $detail) {
                     if ($detail->product) {
@@ -84,7 +96,7 @@ class SaleReturn extends Model
                 }
             }
 
-            // Kalau status sebelumnya completed tapi dibatalkan → kurangi stok
+            // Kalau status sebelumnya completed tapi dibatalkan → kurangi stok kembali
             if ($oldStatus === 'completed' && $newStatus !== 'completed') {
                 foreach ($model->product_details as $detail) {
                     if ($detail->product) {
@@ -102,7 +114,6 @@ class SaleReturn extends Model
             $model->due_amount = $model->total_amount - $model->paid_amount;
         });
     }
-
 
     public function customer()
     {

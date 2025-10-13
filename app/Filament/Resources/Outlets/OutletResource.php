@@ -21,10 +21,7 @@ class OutletResource extends Resource
 
     protected static ?string $navigationGroup = 'User Management';
 
-    public static function isScopedToTenant(): bool
-    {
-        return false;
-    }
+    public static bool $isScopedToTenant = false;
 
     public static function form(Form $form): Form
     {

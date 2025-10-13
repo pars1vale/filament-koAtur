@@ -4,12 +4,10 @@ namespace App\Filament\Resources\Sales;
 
 use App\Filament\Resources\Sales\SalePaymentResource\Pages;
 use App\Filament\Resources\Sales\SalePaymentResource\RelationManagers;
-use App\Models\SalePayment as ModelsSalePayment;
-use App\Models\Sales\SalePayment;
 use App\Models\Sales\Sale;
+use App\Models\Sales\SalePayment;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -25,9 +23,11 @@ class SalePaymentResource extends Resource
 {
     protected static ?string $model = SalePayment::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-credit-card';
     protected static ?string $navigationGroup = 'Sales';
     protected static ?int $navigationSort = 4;
+
+    protected static ?string $tenantRelationshipName = 'sales_payment';
 
     public static function form(Form $form): Form
     {
@@ -51,9 +51,11 @@ class SalePaymentResource extends Resource
 
                 TextInput::make('amount')
                     ->numeric()
-                    ->required(),
+                    ->required()
+                    ->minValue(0)
+                    ->reactive(),
 
-                DateTimePicker::make('date')
+                DatePicker::make('date')
                     ->required()
                     ->default(now()),
 
@@ -75,7 +77,8 @@ class SalePaymentResource extends Resource
                     ->required(),
 
                 Textarea::make('note')
-                    ->nullable(),
+                    ->nullable()
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -86,10 +89,10 @@ class SalePaymentResource extends Resource
                 TextColumn::make('id')->sortable(),
                 TextColumn::make('reference')->searchable(),
                 TextColumn::make('sale.reference')->label('Sale')->sortable()->searchable(),
+                TextColumn::make('sale.customer.customer_name')->label('Customer')->searchable(),
                 TextColumn::make('amount')->money('idr', true),
                 TextColumn::make('payment_method')->badge(),
                 TextColumn::make('date')->date(),
-
             ])
             ->filters([
                 //

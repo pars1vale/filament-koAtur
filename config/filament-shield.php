@@ -10,11 +10,12 @@ return [
         'sub_navigation_position' => null,
         'is_globally_searchable' => false,
         'show_model_path' => true,
-        'is_scoped_to_tenant' => true,
+        'is_scoped_to_tenant' => false,
         'cluster' => null,
     ],
 
     'tenant_model' => null,
+
 
     'auth_provider_model' => [
         'fqcn' => 'App\\Models\\User',
@@ -73,7 +74,8 @@ return [
         ],
 
         'widgets' => [
-            'AccountWidget', 'FilamentInfoWidget',
+            'AccountWidget',
+            'FilamentInfoWidget',
         ],
 
         'resources' => [],

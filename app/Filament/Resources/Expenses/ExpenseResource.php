@@ -42,8 +42,11 @@ class ExpenseResource extends Resource
             ->schema([
                 TextInput::make('reference')
                     ->label('Reference')
-                    ->default('EXP')
-                    ->dehydrated(true),
+                    ->readOnly()
+                    ->dehydrated(true)
+                    ->placeholder(function () {
+                        return Expense::generateReference();
+                    }),
                 DateTimePicker::make('date')
                     ->label('Date')
                     ->required(),

@@ -27,10 +27,10 @@ class CurrenciesResource extends Resource
         return 1;
     }
 
-        public static function isScopedToTenant(): bool
-    {
-        return false;
-    }
+    //     public static function isScopedToTenant(): bool
+    // {
+    //     return false;
+    // }
 
     public static function form(Form $form): Form
     {

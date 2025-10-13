@@ -3,6 +3,7 @@
 namespace App\Models\Purchases;
 
 use App\Models\Products\Product;
+use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
 
 class PurchaseReturnDetail extends Model
@@ -11,7 +12,8 @@ class PurchaseReturnDetail extends Model
 
     protected $fillable = [
         'id',
-        'purchase_id',
+        'outlet_id',
+        'purchase_return_id',
         'product_id',
         'product_code',
         'quantity',
@@ -30,12 +32,39 @@ class PurchaseReturnDetail extends Model
         'product_tax_amount' => 'float',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Set outlet_id saat create
+        static::creating(function ($model) {
+            if (empty($model->outlet_id)) {
+                // Gunakan outlet aktif dari Filament Multi-tenancy
+                $model->outlet_id = Filament::getTenant()?->id;
+            }
+        });
+
+        // Set outlet_id saat update
+        static::updating(function ($model) {
+            if (empty($model->outlet_id)) {
+                // Gunakan outlet aktif dari Filament Multi-tenancy
+                $model->outlet_id = Filament::getTenant()?->id;
+            }
+        });
+    }
+
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id');
     }
-    public function purchase()
+
+    public function purchase_return()
     {
         return $this->belongsTo(PurchaseReturn::class, 'purchase_return_id');
+    }
+
+    public function outlet()
+    {
+        return $this->belongsTo(\App\Models\Outlet::class);
     }
 }

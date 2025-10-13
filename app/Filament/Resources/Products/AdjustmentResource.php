@@ -86,7 +86,7 @@ class AdjustmentResource extends Resource
                         TextEntry::make('quantity')->label('Quantity'),
                         TextEntry::make('type')
                             ->label('Type')
-                            ->formatStateUsing(fn (string $state) => $state === 'add'
+                            ->formatStateUsing(fn(string $state) => $state === 'add'
                                 ? '(+) Addition'
                                 : '(-) Subtraction'),
                     ])
@@ -110,5 +110,10 @@ class AdjustmentResource extends Resource
             'create' => Pages\CreateAdjustment::route('/create'),
             'edit' => Pages\EditAdjustment::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->forUserOutlets();
     }
 }

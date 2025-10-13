@@ -12,6 +12,7 @@ class AdjustedProduct extends Model
     use HasFactory;
 
     protected $fillable = [
+        'outlet_id',
         'adjustment_id',
         'product_id',
         'quantity',

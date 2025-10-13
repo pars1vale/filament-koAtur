@@ -8,6 +8,7 @@ use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Forms\Form;
+use Illuminate\Container\Attributes\Auth;
 
 class SystemSettings extends Page
 {

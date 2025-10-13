@@ -4,6 +4,7 @@ namespace App\Models\Purchases;
 
 use App\Models\Outlet;
 use App\Models\Parties\Supplier;
+use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
 
 class Purchase extends Model
@@ -12,6 +13,7 @@ class Purchase extends Model
 
     protected $fillable = [
         'id',
+        'outlet_id',
         'date',
         'reference',
         'supplier_id',
@@ -67,10 +69,23 @@ class Purchase extends Model
 
             // Set due
             $model->due_amount = $model->total_amount - $model->paid_amount;
+
+            // set outlet_id ke active_tenant
+            if (empty($model->outlet_id)) {
+                // Gunakan outlet aktif dari Filament Multi-tenancy
+                $model->outlet_id = Filament::getTenant()?->id;
+            }
         });
 
         // Saat update record
         static::updating(function ($model) {
+
+            if (empty($model->outlet_id)) {
+                // Gunakan outlet aktif dari Filament Multi-tenancy
+                $model->outlet_id = Filament::getTenant()?->id;
+            }
+
+
             // Cek perubahan status
             $oldStatus = $model->getOriginal('status');
             $newStatus = $model->status;
@@ -119,7 +134,7 @@ class Purchase extends Model
         return $this->hasMany(PurchasePayment::class);
     }
 
-        public function outlet()
+    public function outlet()
     {
         return $this->belongsTo(Outlet::class);
     }

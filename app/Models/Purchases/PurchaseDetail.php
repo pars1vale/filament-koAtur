@@ -3,6 +3,7 @@
 namespace App\Models\Purchases;
 
 use App\Models\Products\Product;
+use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
 
 class PurchaseDetail extends Model
@@ -11,6 +12,7 @@ class PurchaseDetail extends Model
 
     protected $fillable = [
         'id',
+        'outlet_id',
         'purchase_id',
         'product_id',
         'product_code',
@@ -29,6 +31,32 @@ class PurchaseDetail extends Model
         'product_discount_amount' => 'float',
         'product_tax_amount' => 'float',
     ];
+
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Auto-generate reference saat create
+        static::creating(function ($model) {
+
+            // set outlet_id ke active_tenant
+            if (empty($model->outlet_id)) {
+                // Gunakan outlet aktif dari Filament Multi-tenancy
+                $model->outlet_id = Filament::getTenant()?->id;
+            }
+        });
+
+        // Saat update record
+        static::updating(function ($model) {
+
+            if (empty($model->outlet_id)) {
+                // Gunakan outlet aktif dari Filament Multi-tenancy
+                $model->outlet_id = Filament::getTenant()?->id;
+            }
+
+        });
+    }
 
     public function product()
     {

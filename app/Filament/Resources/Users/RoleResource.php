@@ -25,7 +25,7 @@ class RoleResource extends Resource implements HasShieldPermissions
 
     protected static ?string $recordTitleAttribute = 'name';
 
-
+    protected static ?string $tenantOwnershipRelationshipName = null;
 
     public static function getNavigationGroup(): ?string
     {
@@ -68,14 +68,14 @@ class RoleResource extends Resource implements HasShieldPermissions
                                     ->nullable()
                                     ->maxLength(255),
 
-                                Forms\Components\Select::make(config('permission.column_names.team_foreign_key'))
-                                    ->label(__('filament-shield::filament-shield.field.team'))
-                                    ->placeholder(__('filament-shield::filament-shield.field.team.placeholder'))
-                                    /** @phpstan-ignore-next-line */
-                                    ->default([Filament::getTenant()?->id])
-                                    ->options(fn(): Arrayable => Utils::getTenantModel() ? Utils::getTenantModel()::pluck('name', 'id') : collect())
-                                    ->hidden(fn(): bool => ! (static::shield()->isCentralApp() && Utils::isTenancyEnabled()))
-                                    ->dehydrated(fn(): bool => ! (static::shield()->isCentralApp() && Utils::isTenancyEnabled())),
+                                // Forms\Components\Select::make(config('permission.column_names.team_foreign_key'))
+                                //     ->label(__('filament-shield::filament-shield.field.team'))
+                                //     ->placeholder(__('filament-shield::filament-shield.field.team.placeholder'))
+                                //     /** @phpstan-ignore-next-line */
+                                //     ->default([Filament::getTenant()?->id])
+                                //     ->options(fn(): Arrayable => Utils::getTenantModel() ? Utils::getTenantModel()::pluck('name', 'id') : collect())
+                                //     ->hidden(fn(): bool => ! (static::shield()->isCentralApp() && Utils::isTenancyEnabled()))
+                                //     ->dehydrated(fn(): bool => ! (static::shield()->isCentralApp() && Utils::isTenancyEnabled())),
                                 ShieldSelectAllToggle::make('select_all')
                                     ->onIcon('heroicon-s-shield-check')
                                     ->offIcon('heroicon-s-shield-exclamation')
@@ -106,13 +106,13 @@ class RoleResource extends Resource implements HasShieldPermissions
                     ->badge()
                     ->color('warning')
                     ->label(__('filament-shield::filament-shield.column.guard_name')),
-                Tables\Columns\TextColumn::make('team.name')
-                    ->default('Global')
-                    ->badge()
-                    ->color(fn(mixed $state): string => str($state)->contains('Global') ? 'gray' : 'primary')
-                    ->label(__('filament-shield::filament-shield.column.team'))
-                    ->searchable()
-                    ->visible(fn(): bool => static::shield()->isCentralApp() && Utils::isTenancyEnabled()),
+                // Tables\Columns\TextColumn::make('team.name')
+                //     ->default('Global')
+                //     ->badge()
+                //     ->color(fn(mixed $state): string => str($state)->contains('Global') ? 'gray' : 'primary')
+                //     ->label(__('filament-shield::filament-shield.column.team'))
+                //     ->searchable()
+                //     ->visible(fn(): bool => static::shield()->isCentralApp() && Utils::isTenancyEnabled()),
                 Tables\Columns\TextColumn::make('permissions_count')
                     ->badge()
                     ->label(__('filament-shield::filament-shield.column.permissions'))
@@ -221,8 +221,19 @@ class RoleResource extends Resource implements HasShieldPermissions
         return false;
     }
 
+    public static function getTenantOwnershipRelationshipName(): string
+    {
+        return '';
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->withoutGlobalScopes();
+    }
+
     public static function canGloballySearch(): bool
     {
         return Utils::isResourceGloballySearchable() && count(static::getGloballySearchableAttributes()) && static::canViewAny();
     }
+
 }

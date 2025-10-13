@@ -3,14 +3,14 @@
 namespace App\Models\Sales;
 
 use App\Models\Outlet;
-use App\Models\Sales\Sale;
+use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
 
 class SalePayment extends Model
 {
-
     protected $fillable = [
         'sale_id',
+        'outlet_id',
         'amount',
         'date',
         'reference',
@@ -27,8 +27,23 @@ class SalePayment extends Model
     {
         return $this->belongsTo(Outlet::class);
     }
+
     protected static function booted()
     {
+        // Set outlet_id saat create
+        static::creating(function ($model) {
+            if (empty($model->outlet_id)) {
+                $model->outlet_id = Filament::getTenant()?->id;
+            }
+        });
+
+        // Set outlet_id saat update
+        static::updating(function ($model) {
+            if (empty($model->outlet_id)) {
+                $model->outlet_id = Filament::getTenant()?->id;
+            }
+        });
+
         // Saat payment baru dibuat
         static::created(function ($payment) {
             $payment->sale?->recalculatePayment();

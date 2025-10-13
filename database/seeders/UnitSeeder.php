@@ -15,6 +15,7 @@ class UnitSeeder extends Seeder
     {
         DB::table('units')->insert([
             [
+                'outlet_id' => '1',
                 'name' => 'Piece',
                 'short_name' => 'pc',
                 'operator' => '*',
@@ -23,6 +24,7 @@ class UnitSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'outlet_id' => '1',
                 'name' => 'Box',
                 'short_name' => 'box',
                 'operator' => '*',

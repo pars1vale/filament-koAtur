@@ -8,6 +8,7 @@ use App\Models\Products\Product;
 use App\Models\Adjustments\Adjustment;
 use App\Models\Adjustments\AdjustedProduct;
 use Filament\Notifications\Notification;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class AdjustStock extends Page implements Forms\Contracts\HasForms
@@ -106,7 +107,10 @@ class AdjustStock extends Page implements Forms\Contracts\HasForms
 
         $newNumber = str_pad($lastNumber + 1, 5, '0', STR_PAD_LEFT);
 
+        $outletId = Auth::user()->outlets()->first()?->id ?? 1;
+
         $adjustment = Adjustment::create([
+            'outlet_id' => $outletId,
             'date' => $formState['adjustment_date'] ?? now(),
             'reference' => 'ADJ-' . $newNumber,
             'note' => $this->note,
@@ -114,6 +118,7 @@ class AdjustStock extends Page implements Forms\Contracts\HasForms
 
         foreach ($this->items as $item) {
             AdjustedProduct::create([
+                'outlet_id' => $outletId,
                 'adjustment_id' => $adjustment->id,
                 'product_id' => $item['id'],
                 'quantity' => $item['quantity'],

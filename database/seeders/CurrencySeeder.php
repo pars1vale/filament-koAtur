@@ -15,6 +15,7 @@ class CurrencySeeder extends Seeder
     {
         DB::table('currencies')->insert([
             [
+                'outlet_id' => '1',
                 'currency_name' => 'Indonesian Rupiah',
                 'code' => 'IDR',
                 'symbol' => 'Rp',
@@ -25,6 +26,7 @@ class CurrencySeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'outlet_id' => '1',
                 'currency_name' => 'US Dollar',
                 'code' => 'USD',
                 'symbol' => '$',

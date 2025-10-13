@@ -6,6 +6,7 @@ use App\Filament\Resources\Purchases\PurchaseReturnResource;
 use App\Models\Purchases\PurchaseReturnPayment;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Support\Facades\Auth;
 
 class CreatePurchaseReturn extends CreateRecord
 {
@@ -14,18 +15,13 @@ class CreatePurchaseReturn extends CreateRecord
     protected function afterCreate(): void
     {
         $purchaseReturn = $this->record;
+        $outletId = Auth::user()->outlets->first()?->id;
 
-        if ($purchaseReturn->status === 'completed') {
-            foreach ($purchaseReturn->product_details as $detail) {
-                if ($detail->product) {
-                    $detail->product->decrement('product_quantity', $detail->quantity);
-                }
-            }
-        }
 
         if ($purchaseReturn->paid_amount > 0) {
             PurchaseReturnPayment::create([
                 'purchase_return_id' => $purchaseReturn->id,
+                'outlet_id' => $outletId,
                 'amount'             => $purchaseReturn->paid_amount,
                 'date'               => $purchaseReturn->date,
                 'reference'          => 'PYR/' . $purchaseReturn->reference,

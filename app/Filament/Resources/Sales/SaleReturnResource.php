@@ -26,20 +26,20 @@ class SaleReturnResource extends Resource
 {
     protected static ?string $model = SaleReturn::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-arrow-turn-up-left';
 
     protected static ?string $navigationGroup = 'Sales Return';
     protected static ?int $navigationSort = 1;
 
+    protected static ?string $tenantRelationshipName = 'sales_return';
 
     // Helper perhitungan
-
     public static function calculateTax(callable $set, callable $get, float $baseTotal): float
     {
         $taxPercentage = (float) ($get('tax_percentage') ?? 0);
-        $taxAmount     = ($baseTotal * $taxPercentage) / 100;
+        $taxAmount = ($baseTotal * $taxPercentage) / 100;
 
-        $set('tax_amount', round($taxAmount));
+        $set('tax_amount', round($taxAmount, 2));
 
         return $taxAmount;
     }
@@ -47,20 +47,20 @@ class SaleReturnResource extends Resource
     public static function calculateDiscount(callable $set, callable $get, float $baseTotal): float
     {
         $discountPercentage = (float) ($get('discount_percentage') ?? 0);
-        $discountAmount     = ($baseTotal * $discountPercentage) / 100;
+        $discountAmount = ($baseTotal * $discountPercentage) / 100;
 
-        $set('discount_amount', round($discountAmount));
+        $set('discount_amount', round($discountAmount, 2));
 
         return $discountAmount;
     }
 
     protected static function calculateProductSubtotal(array $item, callable $set = null, Product $product = null): float
     {
-        $quantity  = (float) ($item['quantity'] ?? 0);
+        $quantity = (float) ($item['quantity'] ?? 0);
         $unitPrice = (float) ($item['unit_price'] ?? 0);
 
         $discountValue = (float) ($item['product_discount_amount'] ?? 0);
-        $discountType  = $item['product_discount_type'] ?? 'percent';
+        $discountType = $item['product_discount_type'] ?? 'percent';
 
         $base = $quantity * $unitPrice;
 
@@ -76,23 +76,23 @@ class SaleReturnResource extends Resource
         if ($taxType === 0) {
             // EXCLUSIVE
             $taxAmount = $taxRate > 0 ? (($base - $discountAmount) * $taxRate / 100) : 0;
-            $subtotal  = $base - $discountAmount + $taxAmount;
+            $subtotal = $base - $discountAmount + $taxAmount;
         } else {
             // INCLUSIVE
-            $netBase   = $base - $discountAmount;
+            $netBase = $base - $discountAmount;
             $taxAmount = $taxRate > 0 ? ($netBase - ($netBase / (1 + $taxRate / 100))) : 0;
-            $subtotal  = $netBase;
+            $subtotal = $netBase;
         }
 
         if ($set) {
-            $set('product_discount_amount', round($discountAmount));
-            $set('product_tax_amount', round($taxAmount));
+            $set('product_discount_amount', round($discountAmount, 2));
+            $set('product_tax_amount', round($taxAmount, 2));
         }
 
-        return $subtotal;
+        return round($subtotal, 2);
     }
 
-    public static function calculateTotal(callable $set, callable $get): float
+    public static function calculateBaseTotal(callable $get): float
     {
         $details = $get('details') ?? [];
 
@@ -101,22 +101,40 @@ class SaleReturnResource extends Resource
             return self::calculateProductSubtotal($item, null, $product);
         });
 
-        $set('total_amount', $total);
-
-        return $total;
+        return round($total, 2);
     }
 
-    public static function calculateDue(callable $set, callable $get): void
+    public static function calculateGrandTotal(callable $set, callable $get): float
     {
-        $baseTotal      = self::calculateTotal($set, $get);
-        $taxAmount      = self::calculateTax($set, $get, $baseTotal);
+        $baseTotal = self::calculateBaseTotal($get);
+        $taxAmount = self::calculateTax($set, $get, $baseTotal);
         $discountAmount = self::calculateDiscount($set, $get, $baseTotal);
 
         $grandTotal = $baseTotal + $taxAmount - $discountAmount;
-        $set('total_amount', round($grandTotal));
 
+        // Update all related fields
+        $set('total_amount', round($grandTotal, 2));
+
+        // Calculate due amount
         $paid = (float) ($get('paid_amount') ?? 0);
-        $set('due_amount', round($grandTotal - $paid));
+        $dueAmount = max(0, round($grandTotal - $paid, 2));
+        $set('due_amount', $dueAmount);
+
+        // Update payment status based on amounts
+        self::updatePaymentStatus($set, $get, $grandTotal, $paid);
+
+        return $grandTotal;
+    }
+
+    protected static function updatePaymentStatus(callable $set, callable $get, float $grandTotal, float $paid): void
+    {
+        if ($paid <= 0) {
+            $set('payment_status', 'unpaid');
+        } elseif ($paid >= $grandTotal) {
+            $set('payment_status', 'paid');
+        } else {
+            $set('payment_status', 'partial');
+        }
     }
 
     public static function form(Form $form): Form
@@ -130,24 +148,25 @@ class SaleReturnResource extends Resource
                     ->placeholder(function () {
                         $lastId = SaleReturn::max('id') ?? 0;
                         $nextId = $lastId + 1;
-                        return 'SR' . str_pad($nextId, 4, '0', STR_PAD_LEFT);
+                        return 'SRT' . str_pad($nextId, 4, '0', STR_PAD_LEFT);
                     }),
 
                 Select::make('customer_id')
                     ->label('Customer')
                     ->relationship('customer', 'customer_name')
-                    ->required(),
+                    ->required()
+                    ->live()
+                    ->afterStateUpdated(fn($state, $set, $get) => self::calculateGrandTotal($set, $get)),
 
                 DateTimePicker::make('date')
                     ->default(now())
                     ->required()
-                    ->label('Purchase Date'),
+                    ->label('Return Date'),
 
                 Section::make('Product Details')
                     ->schema([
                         Repeater::make('details')
                             ->relationship('product_details')
-                            ->reactive()
                             ->schema([
                                 Hidden::make('id'),
 
@@ -156,7 +175,7 @@ class SaleReturnResource extends Resource
                                     ->preload()
                                     ->searchable()
                                     ->required()
-                                    ->reactive()
+                                    ->live()
                                     ->afterStateUpdated(function ($state, callable $set, callable $get) {
                                         $product = Product::find($state);
                                         if ($product) {
@@ -166,11 +185,11 @@ class SaleReturnResource extends Resource
                                             $set('product_discount_amount', 0);
                                             $set('product_discount_type', 'percent');
 
-                                            $item     = $get();
+                                            $item = $get();
                                             $subTotal = self::calculateProductSubtotal($item, $set, $product);
                                             $set('sub_total', $subTotal);
                                         }
-                                        self::calculateDue($set, $get);
+                                        self::calculateGrandTotal($set, $get);
                                     }),
 
                                 TextInput::make('product_code')
@@ -181,13 +200,13 @@ class SaleReturnResource extends Resource
                                     ->numeric()
                                     ->default(1)
                                     ->required()
-                                    ->reactive()
+                                    ->live()
                                     ->afterStateUpdated(function ($state, callable $set, $get) {
-                                        $product   = Product::find($get('product_id'));
-                                        $item      = $get();
-                                        $subTotal  = self::calculateProductSubtotal($item, $set, $product);
+                                        $product = Product::find($get('product_id'));
+                                        $item = $get();
+                                        $subTotal = self::calculateProductSubtotal($item, $set, $product);
                                         $set('sub_total', $subTotal);
-                                        self::calculateDue($set, $get);
+                                        self::calculateGrandTotal($set, $get);
                                     }),
 
                                 TextInput::make('unit_price')
@@ -202,20 +221,27 @@ class SaleReturnResource extends Resource
                                     ->default(0)
                                     ->live()
                                     ->afterStateUpdated(function ($state, callable $set, $get) {
-                                        $product   = Product::find($get('product_id'));
-                                        $item      = $get();
-                                        $subTotal  = self::calculateProductSubtotal($item, $set, $product);
+                                        $product = Product::find($get('product_id'));
+                                        $item = $get();
+                                        $subTotal = self::calculateProductSubtotal($item, $set, $product);
                                         $set('sub_total', $subTotal);
-                                        self::calculateDue($set, $get);
+                                        self::calculateGrandTotal($set, $get);
                                     }),
 
                                 Select::make('product_discount_type')
                                     ->options([
-                                        'fixed'   => 'Fixed',
+                                        'fixed' => 'Fixed',
                                         'percent' => 'Percent',
                                     ])
                                     ->default('percent')
-                                    ->dehydrated(),
+                                    ->live()
+                                    ->afterStateUpdated(function ($state, callable $set, $get) {
+                                        $product = Product::find($get('product_id'));
+                                        $item = $get();
+                                        $subTotal = self::calculateProductSubtotal($item, $set, $product);
+                                        $set('sub_total', $subTotal);
+                                        self::calculateGrandTotal($set, $get);
+                                    }),
 
                                 TextInput::make('product_tax_amount')
                                     ->label('Tax Amount')
@@ -233,91 +259,117 @@ class SaleReturnResource extends Resource
                             ])
                             ->columns(3)
                             ->addActionLabel('Add Product')
+                            ->live()
                             ->afterStateUpdated(function ($state, $set, $get) {
-                                self::calculateDue($set, $get);
+                                self::calculateGrandTotal($set, $get);
+                            })
+                            ->deleteAction(function ($set, $get) {
+                                self::calculateGrandTotal($set, $get);
                             })
                     ])
                     ->collapsible()
                     ->collapsed(false),
 
-                TextInput::make('tax_percentage')
-                    ->numeric()
-                    ->default(0)
-                    ->live()
-                    ->afterStateUpdated(fn($state, $set, $get) => self::calculateDue($set, $get)),
+                // Global Discounts and Taxes
+                Section::make('Global Adjustments')
+                    ->schema([
+                        TextInput::make('tax_percentage')
+                            ->numeric()
+                            ->default(0)
+                            ->label('Tax Percentage (%)')
+                            ->live()
+                            ->afterStateUpdated(fn($state, $set, $get) => self::calculateGrandTotal($set, $get)),
 
-                TextInput::make('tax_amount')
-                    ->numeric()
-                    ->readOnly()
-                    ->dehydrated(true),
+                        TextInput::make('tax_amount')
+                            ->numeric()
+                            ->readOnly()
+                            ->label('Tax Amount')
+                            ->dehydrated(true),
 
-                TextInput::make('discount_percentage')
-                    ->numeric()
-                    ->default(0)
-                    ->live()
-                    ->afterStateUpdated(fn($state, $set, $get) => self::calculateDue($set, $get)),
+                        TextInput::make('discount_percentage')
+                            ->numeric()
+                            ->default(0)
+                            ->label('Discount Percentage (%)')
+                            ->live()
+                            ->afterStateUpdated(fn($state, $set, $get) => self::calculateGrandTotal($set, $get)),
 
-                TextInput::make('discount_amount')
-                    ->numeric()
-                    ->readOnly()
-                    ->dehydrated(true),
-
-                Select::make('status')
-                    ->label('Status')
-                    ->options([
-                        'pending'   => 'Pending',
-                        'completed' => 'Completed',
-                        'cancelled' => 'Cancelled',
+                        TextInput::make('discount_amount')
+                            ->numeric()
+                            ->readOnly()
+                            ->label('Discount Amount')
+                            ->dehydrated(true),
                     ])
-                    ->default('pending')
-                    ->required(),
+                    ->columns(2),
 
-                Select::make('payment_status')
-                    ->label('Payment Status')
-                    ->options([
-                        'unpaid'   => 'Unpaid',
-                        'paid' => 'Paid',
-                        'partial' => 'Partial',
+                // Totals Section
+                Section::make('Totals')
+                    ->schema([
+                        TextInput::make('total_amount')
+                            ->label('Total Amount')
+                            ->numeric()
+                            ->readOnly()
+                            ->dehydrated(true)
+                            ->prefix('IDR'),
+
+                        TextInput::make('paid_amount')
+                            ->numeric()
+                            ->label('Paid Amount')
+                            ->required()
+                            ->default(0)
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(fn($state, $set, $get) => self::calculateGrandTotal($set, $get))
+                            ->prefix('IDR'),
+
+                        TextInput::make('due_amount')
+                            ->label('Due Amount')
+                            ->numeric()
+                            ->readOnly()
+                            ->dehydrated(true)
+                            ->prefix('IDR'),
                     ])
-                    ->default('pending')
-                    ->required(),
+                    ->columns(3),
 
-                Select::make('payment_method')
-                    ->label('Payment Method')
-                    ->options([
-                        'cash'        => 'Cash',
-                        'credit_card' => 'Credit Card',
-                        'bank'        => 'Bank Transfer',
-                        'cheque'      => 'Cheque',
-                        'other'       => 'Other',
+                // Status Section
+                Section::make('Status')
+                    ->schema([
+                        Select::make('status')
+                            ->label('Return Status')
+                            ->options([
+                                'pending' => 'Pending',
+                                'completed' => 'Completed',
+                                'cancelled' => 'Cancelled',
+                            ])
+                            ->default('pending')
+                            ->required(),
+
+                        Select::make('payment_status')
+                            ->label('Payment Status')
+                            ->options([
+                                'unpaid' => 'Unpaid',
+                                'paid' => 'Paid',
+                                'partial' => 'Partial',
+                            ])
+                            ->default('unpaid')
+                            ->required()
+                            ->dehydrated(),
+
+                        Select::make('payment_method')
+                            ->label('Payment Method')
+                            ->options([
+                                'cash' => 'Cash',
+                                'credit_card' => 'Credit Card',
+                                'bank' => 'Bank Transfer',
+                                'cheque' => 'Cheque',
+                                'other' => 'Other',
+                            ])
+                            ->default('cash')
+                            ->required(),
                     ])
-                    ->default('cash')
-                    ->required(),
-
-                TextInput::make('total_amount')
-                    ->label('Total Amount')
-                    ->numeric()
-                    ->readOnly()
-                    ->dehydrated(true)
-                    ->reactive(),
-
-                TextInput::make('paid_amount')
-                    ->numeric()
-                    ->label('Paid Amount')
-                    ->required()
-                    ->default(0)
-                    ->live(debounce: 500)
-                    ->afterStateUpdated(fn($state, $set, $get) => self::calculateDue($set, $get)),
-
-                TextInput::make('due_amount')
-                    ->label('Due Amount')
-                    ->numeric()
-                    ->readOnly()
-                    ->reactive()
-                    ->dehydrated(true),
+                    ->columns(3),
 
                 Textarea::make('note')
-                    ->nullable(),
+                    ->nullable()
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -328,7 +380,8 @@ class SaleReturnResource extends Resource
                 TextColumn::make('reference')->searchable(),
                 TextColumn::make('customer.customer_name')->searchable(),
                 TextColumn::make('date'),
-                TextColumn::make('status'),
+                TextColumn::make('status')->badge(),
+                TextColumn::make('payment_status')->badge(),
                 TextColumn::make('paid_amount')->money('idr'),
                 TextColumn::make('total_amount')->money('idr'),
                 TextColumn::make('due_amount')->money('idr'),
@@ -338,6 +391,7 @@ class SaleReturnResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

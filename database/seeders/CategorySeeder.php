@@ -15,12 +15,14 @@ class CategorySeeder extends Seeder
     {
         DB::table('categories')->insert([
             [
+                'outlet_id' => '1',
                 'category_code' => 'CAT-001',
                 'category_name' => 'Electronics',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
+                'outlet_id' => '1',
                 'category_code' => 'CAT-002',
                 'category_name' => 'Furniture',
                 'created_at' => now(),

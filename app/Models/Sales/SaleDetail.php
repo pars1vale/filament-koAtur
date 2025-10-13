@@ -3,6 +3,7 @@
 namespace App\Models\Sales;
 
 use App\Models\Products\Product;
+use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
 
 class SaleDetail extends Model
@@ -11,6 +12,7 @@ class SaleDetail extends Model
 
     protected $fillable = [
         'id',
+        'outlet_id',
         'sale_id',
         'product_id',
         'product_code',
@@ -22,7 +24,6 @@ class SaleDetail extends Model
         'product_tax_amount',
     ];
 
-
     protected $casts = [
         'quantity' => 'float',
         'unit_price' => 'float',
@@ -31,12 +32,37 @@ class SaleDetail extends Model
         'product_tax_amount' => 'float',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Set outlet_id saat create
+        static::creating(function ($model) {
+            if (empty($model->outlet_id)) {
+                $model->outlet_id = Filament::getTenant()?->id;
+            }
+        });
+
+        // Set outlet_id saat update
+        static::updating(function ($model) {
+            if (empty($model->outlet_id)) {
+                $model->outlet_id = Filament::getTenant()?->id;
+            }
+        });
+    }
+
     public function product()
     {
-        return $this->belongsTo(Product::class, 'sale_id');
+        return $this->belongsTo(Product::class, 'product_id');
     }
+
     public function sale()
     {
         return $this->belongsTo(Sale::class, 'sale_id');
+    }
+
+    public function outlet()
+    {
+        return $this->belongsTo(\App\Models\Outlet::class);
     }
 }

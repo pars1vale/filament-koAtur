@@ -6,6 +6,7 @@ use App\Filament\Resources\Purchases\PaymentResource\Pages;
 use App\Models\Purchases\Purchase;
 use App\Models\Purchases\PurchasePayment;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -14,6 +15,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class PaymentResource extends Resource
 {
@@ -22,6 +24,8 @@ class PaymentResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-wallet';
     protected static ?string $navigationGroup = 'Purchases';
     protected static ?int $navigationSort = 4;
+
+protected static ?string $tenantRelationshipName = 'purchases_payment';
 
     public static function form(Form $form): Form
     {

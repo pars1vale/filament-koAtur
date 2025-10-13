@@ -19,12 +19,12 @@ class OutletSeeder extends Seeder
                 'slug' => 'outlet-pusat',
             ],
             [
-                'name' => 'Outlet Cabang Surabaya',
-                'slug' => 'outlet-cabang-surabaya',
+                'name' => 'Outlet Cabang 1',
+                'slug' => 'outlet-cabang-1',
             ],
             [
-                'name' => 'Outlet Cabang Bandung',
-                'slug' => 'outlet-cabang-bandung',
+                'name' => 'Outlet Cabang 2',
+                'slug' => 'outlet-cabang-2',
             ],
             // [
             //     'name' => 'Outlet Cabang Bali',

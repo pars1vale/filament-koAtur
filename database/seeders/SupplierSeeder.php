@@ -15,6 +15,7 @@ class SupplierSeeder extends Seeder
     {
         DB::table('suppliers')->insert([
             [
+                'outlet_id' => '1',
                 'supplier_name' => 'Test Supplier 1',
                 'supplier_email' => 'majujaya@example.com',
                 'supplier_phone' => '08123456789',
@@ -25,6 +26,7 @@ class SupplierSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'outlet_id' => '1',
                 'supplier_name' => 'Test Supplier 2',
                 'supplier_email' => 'sumbermakmur@example.com',
                 'supplier_phone' => '082233445566',
@@ -36,8 +38,9 @@ class SupplierSeeder extends Seeder
             ],
         ]);
 
-                DB::table('customers')->insert([
+        DB::table('customers')->insert([
             [
+                'outlet_id' => '1',
                 'customer_name' => 'Test Customer 1',
                 'customer_email' => 'majujaya@example.com',
                 'customer_phone' => '08123456789',
@@ -48,6 +51,7 @@ class SupplierSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'outlet_id' => '1',
                 'customer_name' => 'Test Customer 2',
                 'customer_email' => 'sumbermakmur@example.com',
                 'customer_phone' => '082233445566',
