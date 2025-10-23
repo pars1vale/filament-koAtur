@@ -57,6 +57,7 @@ class AdjustStock extends Page implements Forms\Contracts\HasForms
                         ];
                     }
                 }),
+                
             Forms\Components\Group::make([
                 Forms\Components\TextInput::make('reference')
                     ->label('Reference Code')

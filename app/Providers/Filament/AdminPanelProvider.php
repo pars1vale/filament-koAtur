@@ -39,6 +39,7 @@ class AdminPanelProvider extends PanelProvider
             ->navigationGroups([
                 'Products',
                 'Stock Adjustments',
+                'Quotations',
                 'Purchases',
                 'Purchases Return',
                 'Sales',
