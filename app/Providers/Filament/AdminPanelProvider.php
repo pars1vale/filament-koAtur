@@ -45,6 +45,7 @@ class AdminPanelProvider extends PanelProvider
                 'Sales',
                 'Sales Return',
                 'Parties',
+                'Reports',
                 'Expenses',
                 'Settings',
                 'User Management'
