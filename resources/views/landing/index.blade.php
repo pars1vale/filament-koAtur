@@ -92,7 +92,7 @@ License: For each use you must have a valid license purchased only from above li
                                             class="logo-default h-30px h-lg-30px" />
                                         <img alt="Logo" src="assets/media/logos/landing-logo.png"
                                             class="logo-sticky h-30px h-lg-30px" />
-                                        <span class="m-0 fs-4 fw-bold text-decoration-none">KOATUR</span>
+                                        <span class="mx-2 fs-1 fw-bolder text-decoration-none">KOATUR</span>
                                 </a>
                                 <!--end::Logo image-->
                             </div>
