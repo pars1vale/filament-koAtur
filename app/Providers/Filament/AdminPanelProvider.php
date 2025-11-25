@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Http\Middleware\BlockFilamentAuth;
 use App\Models\Outlet;
 use Filament\Http\Middleware\Authenticate;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
@@ -65,6 +66,9 @@ class AdminPanelProvider extends PanelProvider
             // Settings Resource Path
             ->discoverResources(in: app_path('Filament/Resources/Settings'), for: 'App\\Filament\\Resources\\Settings')
 
+            // Reports Resource Path
+            ->discoverResources(in: app_path('Filament/Resources/Reports'), for: 'App\\Filament\\Resources\\Reports')
+
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
@@ -73,7 +77,9 @@ class AdminPanelProvider extends PanelProvider
                 // Custom Page for System Settings
                 \App\Filament\Pages\Settings\SystemSettings::class,
                 // Custom Page Stock Adjustment
-                \App\Filament\Pages\AdjustStock::class
+                \App\Filament\Pages\AdjustStock::class,
+
+                \App\Filament\Pages\Reports\SalesReport::class
 
             ])
 
@@ -133,7 +139,8 @@ class AdminPanelProvider extends PanelProvider
                 FilamentShieldPlugin::make(),
             ])
             ->authMiddleware([
-                Authenticate::class,
+                // Authenticate::class,
+                BlockFilamentAuth::class
             ])
             ->plugins([
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),

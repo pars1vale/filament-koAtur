@@ -1,12 +1,12 @@
 <x-filament::page>
     <div class="space-y-6">
-        <div class="bg-white dark:bg-gray-900 rounded-xl shadow p-4">
+        <div class="bg-white rounded-xl shadow p-4">
             {{ $this->form }}
         </div>
 
         <div class="mt-4">
             <table class="table-auto w-full border border-gray-300 text-sm">
-                <thead class="bg-gray-100 dark:bg-gray-800">
+                <thead class="bg-gray-100">
                     <tr>
                         <th class="border px-3 py-2">Product</th>
                         <th class="border px-3 py-2">Net Unit Price</th>
@@ -28,7 +28,7 @@
                             <td class="border px-3 py-2 text-center">
                                 <input type="number" min="1"
                                     wire:model.live="items.{{ $index }}.quantity"
-                                    class="w-20 h-8 rounded-md border-gray-500 dark:bg-gray-800 text-center" />
+                                    class="w-20 h-8 rounded-md border-gray-500 text-center" />
                             </td>
                             <td class="border px-3 py-2 text-center">
                                 Rp {{ number_format($item['tax'], 0, ',', '.') }}
@@ -71,31 +71,31 @@
             </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-900 rounded-xl shadow p-4">
+        <div class="bg-white rounded-xl shadow p-4">
             <div class="flex flex-wrap items-center gap-4 w-full">
 
                 <div class="flex flex-col flex-1 min-w-[150px]">
-                    <label class="text-sm font-medium dark:text-gray-300 mb-1">Tax (%)</label>
+                    <label class="text-sm font-medium mb-1">Tax (%)</label>
                     <input type="number" min="0" wire:model.live="tax_percentage"
-                        class="w-full border border-gray-600 dark:bg-gray-800 rounded-md h-9 px-2 focus:ring-primary-500 focus:border-primary-500" />
+                        class="w-full border border-gray-600 rounded-md h-9 px-2 focus:ring-primary-500 focus:border-primary-500" />
                 </div>
 
                 <div class="flex flex-col flex-1 min-w-[150px]">
-                    <label class="text-sm font-medium dark:text-gray-300 mb-1">Discount (%)</label>
+                    <label class="text-sm font-medium mb-1">Discount (%)</label>
                     <input type="number" min="0" wire:model.live="discount_percentage"
-                        class="w-full border border-gray-600 dark:bg-gray-800 rounded-md h-9 px-2 focus:ring-primary-500 focus:border-primary-500" />
+                        class="w-full border border-gray-600 rounded-md h-9 px-2 focus:ring-primary-500 focus:border-primary-500" />
                 </div>
 
                 <div class="flex flex-col flex-1 min-w-[150px]">
-                    <label class="text-sm font-medium dark:text-gray-300 mb-1">Shipping</label>
+                    <label class="text-sm font-medium mb-1">Shipping</label>
                     <input type="number" min="0" wire:model.live="shipping_amount"
-                        class="w-full border border-gray-600 dark:bg-gray-800 rounded-md h-9 px-2 focus:ring-primary-500 focus:border-primary-500" />
+                        class="w-full border border-gray-600 rounded-md h-9 px-2 focus:ring-primary-500 focus:border-primary-500" />
                 </div>
 
                 <div class="flex flex-col flex-1 min-w-[150px]">
-                    <label class="text-sm font-medium dark:text-gray-300 mb-1">Status</label>
+                    <label class="text-sm font-medium mb-1">Status</label>
                     <select wire:model="status"
-                        class="w-full border border-gray-600 dark:bg-gray-800 rounded-md h-9 px-2 focus:ring-primary-500 focus:border-primary-500">
+                        class="w-full border border-gray-600 rounded-md h-9 px-2 focus:ring-primary-500 focus:border-primary-500">
                         <option value="Pending">Pending</option>
                         <option value="Sent">Sent</option>
                     </select>
@@ -103,7 +103,7 @@
             </div>
 
             <div class="pt-4">
-                <textarea wire:model="note" rows="2" class="w-full dark:bg-gray-800 dark:border-gray-600 rounded-md"
+                <textarea wire:model="note" rows="2" class="w-full rounded-md"
                     placeholder="Note (optional)"></textarea>
             </div>
 

@@ -22,11 +22,11 @@
                     <td class="border px-3 py-2 text-center">{{ $item['stock'] }}</td>
                     <td class="border p-2 text-center">
                         <input type="number" wire:model="items.{{ $index }}.quantity"
-                            class="w-full h-10 dark:bg-gray-800 dark:border-gray-600 rounded-lg">
+                            class="w-full h-10 rounded-lg">
                     </td>
                     <td class="border p-2 text-center">
                         <select wire:model="items.{{ $index }}.type"
-                            class="w-full h-10 dark:bg-gray-800 dark:border-gray-600 rounded-lg">
+                            class="w-full h-10 rounded-lg">
                             <option value="add">(+) Addition</option>
                             <option value="sub">(-) Subtract</option>
                         </select>
@@ -43,7 +43,7 @@
     </table>
 
     <div class="mt-4">
-        <textarea wire:model="note" rows="2" class="w-full dark:bg-gray-800 dark:border-gray-600 rounded-md"
+        <textarea wire:model="note" rows="2" class="w-full rounded-md"
             placeholder="Note (optional)"></textarea>
     </div>
 
