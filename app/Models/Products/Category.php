@@ -3,6 +3,7 @@
 namespace App\Models\Products;
 
 use App\Models\Outlet;
+use App\Models\Products\Product;
 use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
@@ -21,5 +22,8 @@ class Category extends Model
         return $this->belongsTo(Outlet::class);
     }
 
-
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }

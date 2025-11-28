@@ -47,6 +47,7 @@ class AdminPanelProvider extends PanelProvider
                 'Parties',
                 'Reports',
                 'Expenses',
+                'POS Interface',
                 'Settings',
                 'User Management'
             ])

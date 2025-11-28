@@ -53,7 +53,7 @@ class PaymentsReport extends Page implements Tables\Contracts\HasTable, Forms\Co
                         ->options([
                             'cash' => 'Cash',
                             'credit_card' => 'Credit Card',
-                            'bank_transfer' => 'Bank Transfer',
+                            'bank' => 'Bank Transfer',
                             'cheque' => 'Cheque',
                             'other' => 'Other',
                         ])
