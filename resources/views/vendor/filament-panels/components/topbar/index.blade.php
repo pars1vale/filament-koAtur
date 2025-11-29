@@ -6,7 +6,7 @@
         'fi-topbar-with-navigation' => filament()->hasTopNavigation(),
     ]) }}>
     <nav
-        class="flex h-16 items-center gap-x-4 bg-white px-4 shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 md:px-6 lg:px-8">
+        class="flex h-16 items-center gap-x-4 bg-white px-4 shadow-sm ring-1 ring-gray-950/5 md:px-6 lg:px-8">
         {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::TOPBAR_START) }}
 
         @if (filament()->hasNavigation())
@@ -125,7 +125,7 @@
 
             {{-- POS System Button --}}
             <a href="{{ route('filament.admin.pages.dashboard', ['tenant' => filament()->getTenant()?->getKey()]) }}"
-                class="inline-flex items-center px-3 py-2 text-sm font-medium border rounded-md hover:bg-gray-100 dark:hover:bg-gray-800">
+                class="inline-flex items-center px-3 py-2 text-sm font-medium border rounded-md hover:bg-gray-100">
                 <x-heroicon-o-shopping-cart class="w-5 h-5" />
                 POS System
             </a>

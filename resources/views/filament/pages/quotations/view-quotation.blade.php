@@ -1,10 +1,10 @@
 <x-filament::page>
-    <div class="bg-white dark:bg-gray-900 shadow rounded-xl p-6">
+    <div class="bg-white shadow rounded-xl p-6">
         {{-- Header --}}
 
         <div class="flex justify-between items-start mb-2">
             <div>
-                <h2 class="text-l text-gray-800 dark:text-gray-200">
+                <h2 class="text-l text-gray-800">
                     Reference: <b>{{ $quotation->reference }}<b>
                 </h2>
             </div>
@@ -50,7 +50,7 @@
         {{-- Table --}}
         <div class="overflow-x-auto w-full sm:w-1/3 border-t border-gray-300 pt-4">
             <table class="table-auto w-full border border-gray-300 text-sm">
-                <thead class="bg-gray-100 dark:bg-gray-800">
+                <thead class="bg-gray-100">
                     <tr>
                         <th class="border px-3 py-2">#</th>
                         <th class="border px-3 py-2">Product</th>
