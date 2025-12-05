@@ -55,7 +55,7 @@
                 </h1>
                 <p class="text-lg text-gray-600 leading-relaxed">
                     Atur stok, catat penjualan, dan pantau omzet setiap hari. Semua dalam satu aplikasi POS yang praktis
-                    untuk toko kelontong dan frozen food.
+                    untuk toko dan cafe.
                 </p>
                 <button class="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition font-medium">
                     Coba Sekarang Gratis
