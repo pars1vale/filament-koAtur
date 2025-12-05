@@ -8,8 +8,12 @@ use Filament\Forms\Contracts\HasForms;
 
 use App\Models\Products\Category;
 use App\Models\Products\Product;
+use App\Models\Sales\Sale;
+use App\Models\Sales\SaleDetail;
 
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class Cashier extends Page implements HasForms
 {
@@ -89,9 +93,10 @@ class Cashier extends Page implements HasForms
                         }),
                     // End Category Dropdown
                 ]),
+
             Forms\Components\Grid::make(2)
                 ->schema([
-                // DISCOUNT INPUT
+                // Start Discount Input
                 Forms\Components\TextInput::make('discount_percent')
                     ->label('Discount (%)')
                     ->numeric()
@@ -100,17 +105,19 @@ class Cashier extends Page implements HasForms
                     ->default(0)
                     ->reactive()
                     ->afterStateUpdated(fn ($state) => $this->discount_percent = (int) $state),
+                // End Discount Input
 
-                // CUSTOMER NAME INPUT
+                // Start Customer Name Input
                 Forms\Components\TextInput::make('customer_name')
                     ->label('Customer Name')
                     ->placeholder('Enter customer name...')
                     ->reactive()
                     ->afterStateUpdated(fn ($state) => $this->customer_name = $state),
+                // End Customer Name Input
             ]),
         ];
     }
-    // End Form (SEARCH + CATEGORY)
+    // End Form (SEARCH + CATEGORY + DISCOUNT% + CUSTOMER)
     
     // Start Cart Function
     public function selectProduct($productId)
@@ -192,23 +199,109 @@ class Cashier extends Page implements HasForms
             return;
         }
 
-        // Format nama file
-        $timestamp = now()->format('Y-m-d_H-i-s');
-        $fileName = "invoice_{$timestamp}.pdf";
-
-        $pdf = Pdf::loadView('filament.resources.views.pdf.invoice', [
-            'cart' => $this->cart,
-            'subtotal' => $this->subtotal,
-            'discountPercent' => $this->discount_percent,
-            'discountAmount' => $this->discountValue,
-            'total' => $this->total,
-            'customerName' => $this->customer_name,
-            'invoiceTime' => now(),
-        ])->setPaper('A4');
-
-        return response()->streamDownload(function () use ($pdf) {
-            echo $pdf->output();
-        }, $fileName);
+        return $this->saveSaleAndPrint('cash');
     }
     // End Print Bill
+
+    // Start Save Sales + Sale Details + Generate PDF
+    public function saveSaleAndPrint($method)
+    {
+        DB::beginTransaction();
+
+        try {
+
+            // Start Generate next reference: SL0001
+            $nextId = (Sale::max('id') ?? 0) + 1;
+            $reference = 'SL' . str_pad($nextId, 4, '0', STR_PAD_LEFT);
+            // End Generate next reference
+
+            // Start Save Sales
+            $sale = Sale::create([
+                'outlet_id' => Auth::user()->outlet_id,
+                'date' => now(),
+                'reference' => $reference,
+                'customer_id' => null,
+                'tax_percentage' => 0,
+                'tax_amount' => 0,
+                'discount_percentage' => $this->discount_percent,
+                'discount_amount' => $this->discountValue,
+                'shipping_amount' => 0,
+                'total_amount' => $this->total,
+                'paid_amount' => $this->total,
+                'due_amount' => 0,
+                'status' => 'completed',
+                'payment_status' => 'paid',
+                'payment_method' => $method, // FIXED = 'cash'
+                'note' => "Sales of cashier with reference {$reference}",
+            ]);
+            // End Save Sales
+
+            // Start Save Sale Details
+            foreach ($this->cart as $productId => $item) {
+                $product = Product::find($productId);
+
+                if ($product->product_tax_type == 0) {
+                    $tax = $item['price'] * $product->product_order_tax / 100;
+                    $price = $item['price'] + $tax;
+                    SaleDetail::create([
+                        'outlet_id' => Auth::user()->outlet_id,
+                        'sale_id' => $sale->id,
+                        'product_id' => $productId,
+                        'product_code' => $product->product_code,
+                        'quantity' => $item['qty'],
+                        'unit_price' => $item['price'],
+                        'sub_total' => $price * $item['qty'],
+                        'product_discount_amount' => 0,
+                        'product_discount_type' => 'percent',
+                        'product_tax_amount' => $tax,
+                    ]);
+                } else {
+                    $tax = $item['price'] * $product->product_order_tax / 100;
+                    $unit_price = $item['price'] - $tax;
+                    SaleDetail::create([
+                        'outlet_id' => Auth::user()->outlet_id,
+                        'sale_id' => $sale->id,
+                        'product_id' => $productId,
+                        'product_code' => $product->product_code,
+                        'quantity' => $item['qty'],
+                        'unit_price' => $unit_price,
+                        'sub_total' => $item['price'] * $item['qty'],
+                        'product_discount_amount' => 0,
+                        'product_discount_type' => 'percent',
+                        'product_tax_amount' => $tax,
+                    ]);
+                }
+            }
+            // End Save Sale Details
+
+            DB::commit();
+
+            // Start PDF Generation
+            $timestamp = now()->format('Y-m-d_H-i-s');
+            $fileName = "invoice_{$timestamp}.pdf";
+
+            $pdf = Pdf::loadView('filament.resources.views.pdf.invoice', [
+                'cart' => $this->cart,
+                'subtotal' => $this->subtotal,
+                'discountPercent' => $this->discount_percent,
+                'discountAmount' => $this->discountValue,
+                'total' => $this->total,
+                'customerName' => $this->customer_name,
+                'invoiceTime' => now(),
+            ])->setPaper('A4');
+
+            // RESET CART
+            $this->clearAll();
+
+            return response()->streamDownload(function () use ($pdf) {
+                echo $pdf->output();
+            }, $fileName);
+            // End PDF Generation
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+    // End Save Sales + Sale Details + Generate PDF
 }

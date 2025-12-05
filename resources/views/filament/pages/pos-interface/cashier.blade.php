@@ -26,6 +26,7 @@
 
                             <div class="font-semibold text-sm">{{ $product->product_name }}</div>
                             <div class="text-xs text-gray-600">{{ $product->product_note ?? '-' }}</div>
+
                             <div class="mt-1 font-bold text-blue-600">
                                 Rp {{ number_format($product->product_price) }}
                             </div>
@@ -57,6 +58,7 @@
                 </x-filament::button>
             </div>
 
+            <!-- CART LIST -->
             <div class="flex-1 overflow-y-auto space-y-3 border-b py-3">
                 @forelse($cart as $id => $item)
                     <div class="flex justify-between items-center">
@@ -113,6 +115,11 @@
                     </div>
                 @endif
 
+                {{-- <x-filament::button color="success" class="w-full mt-2" wire:click="$dispatch('open-payment-modal')">
+                    Print Bill
+                </x-filament::button> --}}
+
+                <!-- CASH ONLY (langsung proses tanpa modal) -->
                 <x-filament::button color="success" class="w-full mt-2" wire:click="printBill">
                     Print Bill
                 </x-filament::button>
@@ -120,4 +127,35 @@
         </div>
 
     </div>
+
+    <!-- PAYMENT MODAL -->
+    {{-- <div x-data="{ open: false }" x-on:open-payment-modal.window="open = true" x-show="open" x-cloak
+        class="fixed inset-0 flex items-center justify-center bg-black/40 z-[999]">
+        <div class="bg-white p-6 rounded-xl shadow-lg w-[320px]">
+
+            <h2 class="text-lg font-bold mb-3">Select Payment Method</h2>
+
+            <div class="space-y-2">
+                @foreach (['cash', 'credit_card', 'bank', 'cheque', 'other'] as $method)
+                    <x-filament::button class="w-full" wire:click="processPayment('{{ $method }}')"
+                        x-on:click="open = false">
+                        {{ ucfirst(str_replace('_', ' ', $method)) }}
+                    </x-filament::button>
+                @endforeach
+            </div>
+
+            <x-filament::button class="w-full mt-3" color="danger" x-on:click="open = false">
+                Cancel
+            </x-filament::button>
+
+        </div>
+    </div> --}}
+
 </x-filament::page>
+
+{{-- PDF DOWNLOAD SCRIPT --}}
+<script>
+    window.addEventListener("download-invoice", event => {
+        window.open(event.detail.url, "_blank");
+    });
+</script>
