@@ -49,4 +49,23 @@ class Product extends Model
             ? asset('storage/' . $this->product_image)
             : 'https://via.placeholder.com/150';
     }
+
+    public static function generateProductCode()
+    {
+        // Get Last Code from Database
+        $lastCode = self::max('product_code');
+
+        if (!$lastCode) {
+            return 'PRD-001';
+        }
+
+        // Get Last Digit of Code
+        $number = (int) str_replace('PRD-', '', $lastCode);
+
+        // Increment
+        $number++;
+
+        // Format to PRD-XYZ
+        return 'PRD-' . str_pad($number, 3, '0', STR_PAD_LEFT);
+    }
 }

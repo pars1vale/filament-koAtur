@@ -34,7 +34,12 @@ class ProductResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('product_name')->required(),
-                Forms\Components\TextInput::make('product_code')->required()->numeric()->unique(ignoreRecord: true),
+                Forms\Components\TextInput::make('product_code')
+                    ->default(fn () => Product::generateProductCode())
+                    ->required()
+                    ->unique(ignoreRecord: true)
+                    ->disabled()
+                    ->dehydrated(true),
                 Forms\Components\Select::make('category_id')
                     ->relationship('category', 'category_name')
                     ->required(),

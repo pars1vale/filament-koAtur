@@ -12,16 +12,23 @@ use App\Models\Sales\Sale;
 use App\Models\Sales\SaleDetail;
 
 use Barryvdh\DomPDF\Facade\Pdf;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
+use Livewire\WithPagination;
+
 class Cashier extends Page implements HasForms
 {
+    use WithPagination;
+
     protected static ?string $navigationIcon = 'heroicon-o-calculator';
     protected static ?string $title = 'Cashier';
     protected static ?string $navigationGroup = 'POS Interface';
 
     protected static string $view = 'filament.pages.pos-interface.cashier';
+
+    protected $paginationTheme = 'tailwind';
 
     public $search = '';
     public $selectedCategory = '';
@@ -41,6 +48,18 @@ class Cashier extends Page implements HasForms
         ]);
     }
 
+    // Start Reset Pagination When Filters Change
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingSelectedCategory()
+    {
+        $this->resetPage();
+    }
+    // End Reset Pagination When Filters Change
+
     // Start Load categories
     public function getCategoriesProperty()
     {
@@ -56,12 +75,13 @@ class Cashier extends Page implements HasForms
     {
         return Product::query()
             ->when($this->search, fn ($q) =>
-                $q->where('product_name', 'like', '%' . $this->search . '%')
+                $q->where('product_name', 'like', "%{$this->search}%")
             )
             ->when($this->selectedCategory, fn ($q) =>
                 $q->where('category_id', $this->selectedCategory)
             )
-            ->paginate(10);
+            ->orderBy('product_name')
+            ->paginate(9);
     }
     // End Load products
 

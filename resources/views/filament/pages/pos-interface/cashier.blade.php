@@ -21,8 +21,7 @@
                         <button wire:click="selectProduct({{ $product->id }})"
                             class="border rounded-xl p-3 shadow hover:bg-blue-50 transition">
 
-                            <img src="{{ $product->image_url }}"
-                                class="w-full h-24 object-cover rounded mb-2" />
+                            <img src="{{ $product->image_url }}" class="w-full h-24 object-cover rounded mb-2" />
 
                             <div class="font-semibold text-sm">{{ $product->product_name }}</div>
                             <div class="text-xs text-gray-600">{{ $product->product_note ?? '-' }}</div>
@@ -41,8 +40,10 @@
                 </div>
 
                 <!-- PAGINATION -->
-                <div class="mt-4">
-                    {{ $this->products->links() }}
+                <div class="mt-6">
+                    <div class="flex justify-center">
+                        {{ $this->products->onEachSide(1)->links('vendor.pagination.tailwind-custom') }}
+                    </div>
                 </div>
 
             </div>
