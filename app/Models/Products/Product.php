@@ -42,4 +42,11 @@ class Product extends Model
     {
         return $this->belongsTo(Outlet::class);
     }
+
+    public function getImageUrlAttribute()
+    {
+        return $this->product_image
+            ? asset('storage/' . $this->product_image)
+            : 'https://via.placeholder.com/150';
+    }
 }

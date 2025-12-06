@@ -21,7 +21,7 @@
                         <button wire:click="selectProduct({{ $product->id }})"
                             class="border rounded-xl p-3 shadow hover:bg-blue-50 transition">
 
-                            <img src="{{ $product->product_image ?? 'https://via.placeholder.com/150' }}"
+                            <img src="{{ $product->image_url }}"
                                 class="w-full h-24 object-cover rounded mb-2" />
 
                             <div class="font-semibold text-sm">{{ $product->product_name }}</div>
