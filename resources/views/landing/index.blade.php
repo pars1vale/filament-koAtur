@@ -22,7 +22,7 @@
             <div class="flex items-center gap-3">
                 @if (Route::has('login'))
                     @auth
-                        <a href="{{ route('dashboard') }}"
+                        <a href="{{ route('filament.admin.pages.dashboard') }}"
                             class="px-6 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-gray-50 transition">
                             Dashboard
                         </a>

@@ -25,11 +25,11 @@ class DatabaseSeeder extends Seeder
             OutletSeeder::class,
             RoleSeeder::class,
             AssignOutletSeeder::class,
-            CurrencySeeder::class,
-            UnitSeeder::class,
-            SupplierSeeder::class,
-            CategorySeeder::class,
-            ProductSeeder::class,
+            // CurrencySeeder::class,
+            // UnitSeeder::class,
+            // SupplierSeeder::class,
+            // CategorySeeder::class,
+            // ProductSeeder::class,
         ]);
     }
 }
