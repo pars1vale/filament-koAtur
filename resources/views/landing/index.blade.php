@@ -339,9 +339,6 @@
             </div>
         </div>
     </footer>
-
-
-    <script type="module" src="{{ Vite::asset('resources/js/script.js') }}"></script>
 </body>
 
 </html>
