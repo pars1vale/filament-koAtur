@@ -36,7 +36,7 @@ class EditAdjustment extends Page implements Forms\Contracts\HasForms
         $this->items = $record->products()
             ->with('product')
             ->get()
-            ->map(fn ($p) => [
+            ->map(fn($p) => [
                 'id' => $p->product_id,
                 'name' => $p->product->product_name,
                 'code' => $p->product->product_code,
@@ -55,14 +55,15 @@ class EditAdjustment extends Page implements Forms\Contracts\HasForms
             Forms\Components\Select::make('product_id')
                 ->label('Search Product')
                 ->searchable()
-                ->getSearchResultsUsing(fn (string $query) =>
+                ->getSearchResultsUsing(
+                    fn(string $query) =>
                     Product::query()
                         ->where('product_name', 'like', "%{$query}%")
                         ->orWhere('product_code', 'like', "%{$query}%")
                         ->limit(10)
                         ->pluck('product_name', 'id')
                 )
-                ->getOptionLabelUsing(fn ($value): ?string => Product::find($value)?->product_name)
+                ->getOptionLabelUsing(fn($value): ?string => Product::find($value)?->product_name)
                 ->reactive()
                 ->afterStateUpdated(function ($state) {
                     $product = Product::find($state);
@@ -82,11 +83,11 @@ class EditAdjustment extends Page implements Forms\Contracts\HasForms
                 Forms\Components\TextInput::make('reference')
                     ->label('Reference Code')
                     ->disabled()
-                    ->default(fn () => $this->reference),
+                    ->default(fn() => $this->reference),
 
                 Forms\Components\DatePicker::make('adjustment_date')
                     ->label('Date')
-                    ->default(fn () => $this->adjustment_date)
+                    ->default(fn() => $this->adjustment_date)
                     ->required()
                     ->native(false),
             ])->columns(2),
@@ -112,7 +113,7 @@ class EditAdjustment extends Page implements Forms\Contracts\HasForms
                 'date' => $formState['adjustment_date'],
                 'note' => $this->note,
             ]);
-            
+
             $oldItems = $this->record->products()->get();
             foreach ($oldItems as $old) {
                 $product = Product::find($old->product_id);
@@ -127,15 +128,16 @@ class EditAdjustment extends Page implements Forms\Contracts\HasForms
             }
 
             $this->record->products()->delete();
-            
+
             foreach ($this->items as $item) {
                 AdjustedProduct::create([
                     'adjustment_id' => $this->record->id,
+                    'outlet_id' => $this->record->outlet_id,
                     'product_id' => $item['id'],
                     'quantity' => $item['quantity'],
                     'type' => $item['type'],
                 ]);
-                
+
                 $product = Product::find($item['id']);
                 if ($product) {
                     if ($item['type'] === 'add') {
