@@ -5,6 +5,7 @@ namespace App\Filament\Pages\POSInterface;
 use Filament\Pages\Page;
 use Filament\Forms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Facades\Filament;
 
 use App\Models\Products\Category;
 use App\Models\Products\Product;
@@ -73,7 +74,12 @@ class Cashier extends Page implements HasForms
     // Start Load products
     public function getProductsProperty()
     {
+        $outletId = Filament::getTenant()?->id;
+
         return Product::query()
+            ->when($outletId, fn ($q) =>
+                $q->where('outlet_id', $outletId)
+            )
             ->when($this->search, fn ($q) =>
                 $q->where('product_name', 'like', "%{$this->search}%")
             )

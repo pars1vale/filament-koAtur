@@ -2,17 +2,18 @@
 
 namespace App\Models\Products;
 
-use App\Models\Outlet;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Settings\Unit;
 use App\Models\Products\Category;
+use App\Models\Settings\Unit;
+use App\Models\Outlet;
 
 class Product extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'outlet_id',
         'category_id',
         'product_name',
         'product_code',
@@ -28,6 +29,7 @@ class Product extends Model
         'product_image',
     ];
 
+    // Relations
     public function category()
     {
         return $this->belongsTo(Category::class);
@@ -43,6 +45,7 @@ class Product extends Model
         return $this->belongsTo(Outlet::class);
     }
 
+    // Accessor
     public function getImageUrlAttribute()
     {
         return $this->product_image
@@ -50,22 +53,35 @@ class Product extends Model
             : 'https://via.placeholder.com/150';
     }
 
-    public static function generateProductCode()
+    // Model Event
+    protected static function booted(): void
     {
-        // Get Last Code from Database
-        $lastCode = self::max('product_code');
+        static::creating(function (Product $product) {
+            // Safety: generate automatically if it doesn't exist yet
+            if (empty($product->product_code)) {
+                $product->product_code = self::generateProductCode(
+                    $product->outlet_id
+                );
+            }
+        });
+    }
 
-        if (!$lastCode) {
-            return 'PRD-001';
-        }
+    // Product Code Generator
+    public static function generateProductCode(int $outletId): string
+    {
+        $prefix = 'PRD' . str_pad($outletId, 2, '0', STR_PAD_LEFT);
 
-        // Get Last Digit of Code
-        $number = (int) str_replace('PRD-', '', $lastCode);
+        $lastProduct = self::where('outlet_id', $outletId)
+            ->where('product_code', 'like', $prefix . '-%')
+            ->orderByRaw('CAST(SUBSTRING(product_code, -3) AS UNSIGNED) DESC')
+            ->first();
 
-        // Increment
-        $number++;
+        $lastNumber = $lastProduct
+            ? (int) substr($lastProduct->product_code, -3)
+            : 0;
 
-        // Format to PRD-XYZ
-        return 'PRD-' . str_pad($number, 3, '0', STR_PAD_LEFT);
+        $nextNumber = $lastNumber + 1;
+
+        return $prefix . '-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
     }
 }

@@ -29,7 +29,7 @@
         @for ($i = 0; $i < $item['barcode_qty']; $i++)
             <div class="barcode">
                 <div>{{ $item['product']->product_name }}</div>
-                {!! DNS1D::getBarcodeHTML($item['product']->product_code, 'EAN13', 2, 50) !!}
+                {!! DNS1D::getBarcodeHTML($item['product']->product_code, $item['product']->product_barcode_symbology, 2, 50) !!}
                 <div>{{ $item['product']->product_code }}</div>
             </div>
         @endfor

@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Products;
 
 use App\Filament\Resources\Products\ProductResource\Pages;
-use App\Filament\Resources\Products\ProductResource\RelationManagers;
 use App\Models\Products\Product;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -11,15 +10,12 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Infolists;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Infolists\Components\Infolist;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\Grid;
 use Filament\Infolists\Components\Group;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ImageEntry;
-use Filament\Infolists\Components\ViewEntry;
+use Filament\Facades\Filament;
 
 class ProductResource extends Resource
 {
@@ -33,13 +29,30 @@ class ProductResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\Hidden::make('outlet_id')
+                    ->default(fn () => Filament::getTenant()?->id)
+                    ->required(),
                 Forms\Components\TextInput::make('product_name')->required(),
                 Forms\Components\TextInput::make('product_code')
-                    ->default(fn () => Product::generateProductCode())
-                    ->required()
-                    ->unique(ignoreRecord: true)
+                    ->label('Product Code')
+                    ->default(fn () => 
+                        Filament::getTenant()
+                            ? Product::generateProductCode(Filament::getTenant()->id)
+                            : null
+                    )
                     ->disabled()
-                    ->dehydrated(true),
+                    ->dehydrated(true)
+                    ->required()
+                    ->unique(
+                        table: 'products',
+                        column: 'product_code',
+                        ignoreRecord: true,
+                        modifyRuleUsing: fn ($rule) =>
+                            $rule->where(
+                                'outlet_id',
+                                Filament::getTenant()?->id
+                            )
+                    ),
                 Forms\Components\Select::make('category_id')
                     ->relationship('category', 'category_name')
                     ->required(),

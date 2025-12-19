@@ -16,21 +16,23 @@ return new class extends Migration
             $table->foreignId('outlet_id')->constrained('outlets')->cascadeOnDelete();
             $table->unsignedBigInteger('category_id');
             $table->string('product_name');
-            $table->string('product_code')->unique();
-            $table->string('product_barcode_symbology')->default('EAN-13');
+            $table->string('product_code');
+            $table->string('product_barcode_symbology')->default('C128');
             $table->integer('product_quantity');
             $table->integer('product_cost');
             $table->integer('product_price');
             $table->unsignedBigInteger('unit_id'); // relasi ke tabel units
             $table->integer('product_stock_alert')->default(0);
             $table->integer('product_order_tax')->nullable();
-            $table->tinyInteger('product_tax_type')->nullable(); // 0=Exclusive, 1=Inclusive
+            $table->boolean('product_tax_type')->nullable(); // 0=Exclusive, 1=Inclusive
             $table->text('product_note')->nullable();
             $table->string('product_image')->nullable();
 
             $table->foreign('category_id')->references('id')->on('categories')->restrictOnDelete();
             $table->foreign('unit_id')->references('id')->on('units')->restrictOnDelete();
             $table->timestamps();
+
+            $table->unique(['outlet_id', 'product_code']);
         });
     }
 
