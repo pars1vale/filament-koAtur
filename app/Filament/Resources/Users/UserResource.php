@@ -26,7 +26,7 @@ class UserResource extends Resource
         return 'User Management';
     }
 
-        public static function isScopedToTenant(): bool
+    public static function isScopedToTenant(): bool
     {
         return false;
     }
@@ -50,6 +50,12 @@ class UserResource extends Resource
                     ->relationship('roles', 'name')
                     ->searchable()
                     ->preload(),
+                Select::make('outlets')
+                    ->label('Outlet')
+                    ->relationship('outlets', 'name')
+                    ->multiple()
+                    ->searchable()
+                    ->preload(),
             ]);
     }
 
@@ -62,7 +68,12 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
                 TextColumn::make('roles.name')
-                ->badge(),
+                    ->badge(),
+                TextColumn::make('outlets.name')
+                    ->label('Outlet')
+                    ->badge()
+                    ->separator(','),
+
 
             ])
             ->filters([
