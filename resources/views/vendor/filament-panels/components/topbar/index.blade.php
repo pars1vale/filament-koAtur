@@ -123,8 +123,8 @@
 
             {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::GLOBAL_SEARCH_AFTER) }}
 
-            {{-- POS System Button --}}
-            <a href="{{ route('filament.admin.pages.dashboard', ['tenant' => filament()->getTenant()?->getKey()]) }}"
+            {{-- POS Interface --}}
+            <a href="{{ route('filament.admin.pages.cashier', ['tenant' => filament()->getTenant()?->getKey()]) }}"
                 class="inline-flex items-center px-3 py-2 text-sm font-medium border rounded-md hover:bg-gray-100">
                 <x-heroicon-o-shopping-cart class="w-5 h-5" />
                 POS System
