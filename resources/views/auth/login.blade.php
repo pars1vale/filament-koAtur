@@ -3,7 +3,7 @@
     <div class="bg-white rounded-lg shadow-lg p-8">
 
         <div class="text-center mb-8">
-            <div class="text-3xl font-bold text-blue-600 mb-2">LOGO</div>
+            <div class="text-3xl font-bold text-blue-600 mb-2">koAtur</div>
         </div>
 
         @if(session('status'))

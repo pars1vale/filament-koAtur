@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>POS System - Kelola Toko Lebih Mudah</title>
+    <title>koAtur POS - Kelola Toko Lebih Mudah</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -13,7 +13,7 @@
     <!-- Header -->
     <header class="border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 md:px-8 py-6 flex items-center justify-between">
-            <div class="text-3xl font-bold text-blue-600">LOGO</div>
+            <div class="text-3xl font-bold text-blue-600">koAtur</div>
             <nav class="hidden md:flex items-center gap-8">
                 <a href="#" class="text-gray-900 font-medium hover:text-blue-600 transition">Home</a>
                 <a href="#" class="text-gray-600 hover:text-gray-900 transition">Layanan</a>
@@ -312,7 +312,7 @@
         <div class="max-w-7xl mx-auto px-4 md:px-8">
             <div class="grid md:grid-cols-4 gap-8 mb-12">
                 <div>
-                    <div class="text-3xl font-bold mb-2">LOGO</div>
+                    <div class="text-3xl font-bold mb-2">koAtur</div>
                 </div>
                 <div>
                     <h4 class="font-bold mb-4">Tautan Cepat</h4>
