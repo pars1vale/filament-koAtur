@@ -2,9 +2,10 @@
 
 namespace App\Filament\Resources\Users;
 
-use App\Filament\Resources\Users\UserResource\Pages;
-use App\Filament\Resources\Users\UserResource\RelationManagers;
+use App\Filament\Resources\Users\OwnerResource\Pages;
+use App\Filament\Resources\Users\OwnerResource\RelationManagers;
 use App\Models\User;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
@@ -17,17 +18,17 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 
-class UserResource extends Resource
+class OwnerResource extends Resource
 {
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-circle';
 
-    protected static ?string $modelLabel = 'All User';
+    protected static ?string $modelLabel = 'User';
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Super Admin';
+        return 'User Management';
     }
 
     public static function isScopedToTenant(): bool
@@ -35,10 +36,18 @@ class UserResource extends Resource
         return false;
     }
 
-    // public static function canAccess(): bool
-    // {
-    //     return Auth::user()->hasRole('superadmin');
-    // }
+    public static function canAccess(): bool
+    {
+        return Auth::user()->hasRole('owner');
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->whereHas('outlets', function ($query) {
+                $query->whereKey(Filament::getTenant()->id);
+            });
+    }
 
     public static function form(Form $form): Form
     {
@@ -88,15 +97,9 @@ class UserResource extends Resource
                     ->label('Role')
                     ->relationship('roles', 'name')
                     ->preload(),
-
-                SelectFilter::make('outlets')
-                    ->label('Outlet')
-                    ->relationship('outlets', 'name')
-                    ->preload(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -115,9 +118,9 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            'index' => Pages\ListOwners::route('/'),
+            'create' => Pages\CreateOwner::route('/create'),
+            'edit' => Pages\EditOwner::route('/{record}/edit'),
         ];
     }
 }

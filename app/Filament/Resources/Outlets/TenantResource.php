@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\Outlets;
 
-use App\Filament\Resources\Outlets\OutletResource\Pages;
-use App\Filament\Resources\Outlets\OutletResource\RelationManagers;
+use App\Filament\Resources\Outlets\TenantResource\Pages;
+use App\Filament\Resources\Outlets\TenantResource\RelationManagers;
 use App\Models\Outlet;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -13,17 +13,17 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class OutletResource extends Resource
+class TenantResource extends Resource
 {
     protected static ?string $model = Outlet::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
 
-    protected static ?string $navigationGroup = 'Super Admin';
+    protected static ?string $navigationGroup = 'User Management';
 
-    protected static ?string $modelLabel = 'All Outlet';
+    protected static ?string $modelLabel = 'Outlet';
 
-    public static bool $isScopedToTenant = false;
+    protected static ?string $tenantOwnershipRelationshipName = 'users';
 
     public static function form(Form $form): Form
     {
@@ -70,9 +70,9 @@ class OutletResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListOutlets::route('/'),
-            'create' => Pages\CreateOutlet::route('/create'),
-            'edit' => Pages\EditOutlet::route('/{record}/edit'),
+            'index' => Pages\ListTenants::route('/'),
+            'create' => Pages\CreateTenant::route('/create'),
+            'edit' => Pages\EditTenant::route('/{record}/edit'),
         ];
     }
 }
