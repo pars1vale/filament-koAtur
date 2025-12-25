@@ -5,8 +5,7 @@
         'fi-topbar sticky top-0 z-20 overflow-x-clip',
         'fi-topbar-with-navigation' => filament()->hasTopNavigation(),
     ]) }}>
-    <nav
-        class="flex h-16 items-center gap-x-4 bg-white px-4 shadow-sm ring-1 ring-gray-950/5 md:px-6 lg:px-8">
+    <nav class="flex h-16 items-center gap-x-4 bg-white px-4 shadow-sm ring-1 ring-gray-950/5 md:px-6 lg:px-8">
         {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::TOPBAR_START) }}
 
         @if (filament()->hasNavigation())
@@ -123,12 +122,19 @@
 
             {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::GLOBAL_SEARCH_AFTER) }}
 
-            {{-- POS Interface --}}
-            <a href="{{ route('filament.admin.pages.cashier', ['tenant' => filament()->getTenant()?->getKey()]) }}"
-                class="inline-flex items-center px-3 py-2 text-sm font-medium border rounded-md hover:bg-gray-100">
-                <x-heroicon-o-shopping-cart class="w-5 h-5" />
-                POS System
-            </a>
+            @php
+                $panel = filament()->getCurrentPanel()?->getId();
+            @endphp
+
+            @if ($panel === 'admin' && filament()->getTenant())
+                <a href="{{ route('filament.admin.pages.cashier', [
+                    'tenant' => filament()->getTenant()->getKey(),
+                ]) }}"
+                    class="inline-flex items-center px-3 py-2 text-sm font-medium border rounded-md hover:bg-gray-100">
+                    <x-heroicon-o-shopping-cart class="w-5 h-5" />
+                    POS System
+                </a>
+            @endif
 
             @if (filament()->auth()->check())
                 @if (filament()->hasDatabaseNotifications())
