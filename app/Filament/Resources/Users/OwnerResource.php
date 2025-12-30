@@ -24,12 +24,9 @@ class OwnerResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user-circle';
 
-    protected static ?string $modelLabel = 'User';
-
-    public static function getNavigationGroup(): ?string
-    {
-        return 'User Management';
-    }
+    protected static ?string $navigationLabel = 'Pengguna';
+    protected static ?string $navigationGroup = 'User Management';
+    protected static ?int $navigationSort = 3;
 
     public static function isScopedToTenant(): bool
     {
@@ -54,17 +51,21 @@ class OwnerResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label('Nama')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('email')
+                    ->label('Email')
                     ->email()
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('password')
+                    ->label('Kata Sandi')
                     ->password()
                     ->required()
                     ->maxLength(255),
                 Select::make('roles')
+                    ->label('Peran')
                     ->relationship('roles', 'name')
                     ->searchable()
                     ->preload(),
@@ -82,10 +83,13 @@ class OwnerResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label('Nama')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
+                    ->label('Email')
                     ->searchable(),
                 TextColumn::make('roles.name')
+                    ->label('Peran')
                     ->badge(),
                 TextColumn::make('outlets.name')
                     ->label('Outlet')

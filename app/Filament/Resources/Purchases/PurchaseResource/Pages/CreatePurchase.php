@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Auth;
 class CreatePurchase extends CreateRecord
 {
     protected static string $resource = PurchaseResource::class;
+    protected static ?string $navigationLabel = 'Buat Pembelian';
+    protected static ?string $navigationGroup = 'Purchases';
+    protected static ?string $title = 'Buat Pembelian';
 
     protected function afterCreate(): void
     {

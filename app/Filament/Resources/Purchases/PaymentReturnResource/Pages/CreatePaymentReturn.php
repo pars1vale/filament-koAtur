@@ -9,4 +9,5 @@ use Filament\Resources\Pages\CreateRecord;
 class CreatePaymentReturn extends CreateRecord
 {
     protected static string $resource = PaymentReturnResource::class;
+    protected static ?string $title = 'Buat Pengembalian Pembayaran';
 }

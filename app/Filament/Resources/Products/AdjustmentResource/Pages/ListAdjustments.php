@@ -11,12 +11,13 @@ use Illuminate\Support\Facades\Auth;
 class ListAdjustments extends ListRecords
 {
     protected static string $resource = AdjustmentResource::class;
+    protected static ?string $title = 'Penyesuaian';
 
     protected function getHeaderActions(): array
     {
         return [
             Action::make('create')
-                ->label('Create Adjustment')
+                ->label('Buat Penyesuaian')
                 ->icon('heroicon-o-plus')
                 ->url(fn() => url('/admin/' . Auth::user()->outlets()->first()->id . '/adjust-stock'))
         ];

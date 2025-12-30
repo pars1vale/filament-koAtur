@@ -24,6 +24,7 @@ class PaymentReturnResource extends Resource
     protected static ?string $model = PurchaseReturnPayment::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-wallet';
+    protected static ?string $navigationLabel = 'Pengembalian Pembayaran';
     protected static ?string $navigationGroup = 'Purchases Return';
     protected static ?int $navigationSort = 2;
 
@@ -38,7 +39,7 @@ class PaymentReturnResource extends Resource
         return $form
             ->schema([
                 Select::make('purchase_return_id')
-                    ->label('Purchase')
+                    ->label('Pembelian')
                     ->searchable()
                     ->preload()
                     ->relationship('purchase_return', 'reference')
@@ -54,20 +55,23 @@ class PaymentReturnResource extends Resource
                     }),
 
                 TextInput::make('amount')
+                    ->label('Jumlah')
                     ->numeric()
                     ->required(),
 
                 DatePicker::make('date')
+                    ->label('Tanggal')
                     ->required()
                     ->default(now()),
 
                 TextInput::make('reference')
-                    ->label('Payment Reference')
+                    ->label('Referensi Pembayaran')
                     ->reactive()
                     ->dehydrated(),
 
 
                 Select::make('payment_method')
+                    ->label('Metode Pembayaran')
                     ->options([
                         'cash'        => 'Cash',
                         'credit_card' => 'Credit Card',
@@ -79,6 +83,8 @@ class PaymentReturnResource extends Resource
                     ->required(),
 
                 Textarea::make('note')
+                    ->label('Catatan')
+                    ->placeholder('Catatan (opsional)')
                     ->nullable(),
             ]);
     }
@@ -87,12 +93,25 @@ class PaymentReturnResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('id')->sortable(),
-                TextColumn::make('reference')->searchable(),
-                TextColumn::make('purchase_return.reference')->label('Purchase')->sortable()->searchable(),
-                TextColumn::make('amount')->money('idr', true),
-                TextColumn::make('payment_method')->badge(),
-                TextColumn::make('date')->date(),
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable(),
+                TextColumn::make('reference')
+                    ->label('No. Referensi')
+                    ->searchable(),
+                TextColumn::make('purchase_return.reference')
+                    ->label('Retur Pembelian')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('amount')
+                    ->label('Jumlah')
+                    ->money('idr', true),
+                TextColumn::make('payment_method')
+                    ->label('Metode Pembayaran')
+                    ->badge(),
+                TextColumn::make('date')
+                    ->label('Tanggal')
+                    ->date(),
             ])
             ->filters([
                 //

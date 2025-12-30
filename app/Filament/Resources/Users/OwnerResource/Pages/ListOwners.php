@@ -9,6 +9,7 @@ use Filament\Resources\Pages\ListRecords;
 class ListOwners extends ListRecords
 {
     protected static string $resource = OwnerResource::class;
+    protected static ?string $title = 'Pengguna';
 
     protected function getHeaderActions(): array
     {

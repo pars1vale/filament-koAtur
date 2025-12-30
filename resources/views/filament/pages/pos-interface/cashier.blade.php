@@ -33,7 +33,7 @@
                         </button>
                     @empty
                         <p class="text-center text-gray-500 col-span-full">
-                            No products found.
+                            Produk tidak ditemukan.
                         </p>
                     @endforelse
 
@@ -52,10 +52,10 @@
         <!-- RIGHT SIDE: CART -->
         <div class="w-1/2 h-auto border-l dark:bg-gray-900 rounded-xl shadow p-4 flex flex-col">
             <div class="flex justify-between items-center mb-3">
-                <h2 class="font-bold text-lg">Current Order</h2>
+                <h2 class="font-bold text-lg">Pesanan Saat Ini</h2>
 
                 <x-filament::button color="danger" size="sm" wire:click="clearAll">
-                    Clear All
+                    Hapus Semua
                 </x-filament::button>
             </div>
 
@@ -87,7 +87,7 @@
 
                     </div>
                 @empty
-                    <p class="text-gray-500 text-center py-10">Cart is empty.</p>
+                    <p class="text-gray-500 text-center py-10">Keranjang kosong.</p>
                 @endforelse
             </div>
 
@@ -100,7 +100,7 @@
                 </div>
 
                 <div class="flex justify-between text-sm">
-                    <span>Discount ({{ $this->discount_percent }}%)</span>
+                    <span>Diskon ({{ $this->discount_percent }}%)</span>
                     <span>- Rp {{ number_format($this->discountValue) }}</span>
                 </div>
 
@@ -112,7 +112,7 @@
                 <!-- Customer Name Display (Optional) -->
                 @if ($this->customer_name)
                     <div class="text-xs text-gray-500 mt-1">
-                        Customer: <strong>{{ $this->customer_name }}</strong>
+                        Pelanggan: <strong>{{ $this->customer_name }}</strong>
                     </div>
                 @endif
 
@@ -122,7 +122,7 @@
 
                 <!-- CASH ONLY (langsung proses tanpa modal) -->
                 <x-filament::button color="success" class="w-full mt-2" wire:click="printBill">
-                    Print Bill
+                    Cetak Tagihan
                 </x-filament::button>
             </div>
         </div>

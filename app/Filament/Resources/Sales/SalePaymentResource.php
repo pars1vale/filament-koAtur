@@ -24,6 +24,7 @@ class SalePaymentResource extends Resource
     protected static ?string $model = SalePayment::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
+    protected static ?string $navigationLabel = 'Pembayaran Penjualan';
     protected static ?string $navigationGroup = 'Sales';
     protected static ?int $navigationSort = 4;
 
@@ -34,7 +35,7 @@ class SalePaymentResource extends Resource
         return $form
             ->schema([
                 Select::make('sale_id')
-                    ->label('Sale')
+                    ->label('Penjualan')
                     ->searchable()
                     ->preload()
                     ->relationship('sale', 'reference')
@@ -50,22 +51,25 @@ class SalePaymentResource extends Resource
                     }),
 
                 TextInput::make('amount')
+                    ->label('Jumlah')
                     ->numeric()
                     ->required()
                     ->minValue(0)
                     ->reactive(),
 
                 DatePicker::make('date')
+                    ->label('Tanggal')
                     ->required()
                     ->default(now()),
 
                 TextInput::make('reference')
-                    ->label('Payment Reference')
+                    ->label('Referensi Pembayaran')
                     ->readOnly()
                     ->reactive()
                     ->dehydrated(),
 
                 Select::make('payment_method')
+                    ->label('Metode Pembayaran')
                     ->options([
                         'cash'        => 'Cash',
                         'credit_card' => 'Credit Card',
@@ -77,6 +81,8 @@ class SalePaymentResource extends Resource
                     ->required(),
 
                 Textarea::make('note')
+                    ->label('Catatan')
+                    ->placeholder('Catatan (opsional)')
                     ->nullable()
                     ->columnSpanFull(),
             ]);
@@ -86,13 +92,28 @@ class SalePaymentResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('id')->sortable(),
-                TextColumn::make('reference')->searchable(),
-                TextColumn::make('sale.reference')->label('Sale')->sortable()->searchable(),
-                TextColumn::make('sale.customer.customer_name')->label('Customer')->searchable(),
-                TextColumn::make('amount')->money('idr', true),
-                TextColumn::make('payment_method')->badge(),
-                TextColumn::make('date')->date(),
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable(),
+                TextColumn::make('reference')
+                    ->label('No. Referensi')
+                    ->searchable(),
+                TextColumn::make('sale.reference')
+                    ->label('Penjualan')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('sale.customer.customer_name')
+                    ->label('Pelanggan')
+                    ->searchable(),
+                TextColumn::make('amount')
+                    ->label('Jumlah')
+                    ->money('idr', true),
+                TextColumn::make('payment_method')
+                    ->label('Metode Pembayaran')
+                    ->badge(),
+                TextColumn::make('date')
+                    ->label('Tanggal')
+                    ->date(),
             ])
             ->filters([
                 //

@@ -11,6 +11,7 @@ use Filament\Facades\Filament;
 class EditSale extends EditRecord
 {
     protected static string $resource = SaleResource::class;
+    protected static ?string $title = 'Ubah Penjualan';
 
     protected function afterSave(): void
     {

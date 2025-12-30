@@ -9,6 +9,7 @@ use Filament\Resources\Pages\EditRecord;
 class EditPaymentReturn extends EditRecord
 {
     protected static string $resource = PaymentReturnResource::class;
+    protected static ?string $title = 'Ubah Pengembalian Pembayaran';
 
     protected function getHeaderActions(): array
     {

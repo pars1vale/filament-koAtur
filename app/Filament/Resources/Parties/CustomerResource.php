@@ -24,6 +24,9 @@ class CustomerResource extends Resource
     protected static ?string $model = Customer::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static ?string $navigationLabel = 'Pelanggan';
+    protected static ?string $navigationGroup = 'Parties';
+    protected static ?int $navigationSort = 1;
 
     // Grouping to parties menu
     public static function getNavigationGroup(): ?string
@@ -42,22 +45,28 @@ class CustomerResource extends Resource
         return $form
             ->schema([
                 TextInput::make('customer_name')
+                    ->label('Nama Pelanggan')
                     ->required()
                     ->maxLength(50),
                 TextInput::make('customer_email')
+                    ->label('Email Pelanggan')
                     ->required()
                     ->email()
                     ->maxLength(100),
                 TextInput::make('customer_phone')
+                    ->label('Telepon Pelanggan')
                     ->required()
                     ->maxLength(20),
                 TextInput::make('city')
+                    ->label('Kota')
                     ->required()
                     ->maxLength(50),
                 TextInput::make('country')
+                    ->label('Negara')
                     ->required()
                     ->maxLength(50),
                 Textarea::make('address')
+                    ->label('Alamat')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -67,12 +76,18 @@ class CustomerResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('customer_name'),
-                TextColumn::make('customer_email'),
-                TextColumn::make('customer_phone'),
-                TextColumn::make('city'),
-                TextColumn::make('country'),
+                TextColumn::make('customer_name')
+                    ->label('Nama Pelanggan'),
+                TextColumn::make('customer_email')
+                    ->label('Email Pelanggan'),
+                TextColumn::make('customer_phone')
+                    ->label('Telepon Pelanggan'),
+                TextColumn::make('city')
+                    ->label('Kota'),
+                TextColumn::make('country')
+                    ->label('Negara'),
                 TextColumn::make('address')
+                    ->label('Alamat')
                     ->wrap(),
             ])
             ->filters([

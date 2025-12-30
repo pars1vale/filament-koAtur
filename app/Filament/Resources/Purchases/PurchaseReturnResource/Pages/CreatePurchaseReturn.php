@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class CreatePurchaseReturn extends CreateRecord
 {
     protected static string $resource = PurchaseReturnResource::class;
+    protected static ?string $title = 'Buat Retur Pembelian';
 
     protected function afterCreate(): void
     {

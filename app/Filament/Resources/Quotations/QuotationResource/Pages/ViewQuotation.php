@@ -25,7 +25,7 @@ class ViewQuotation extends Page
 
     public function getTitle(): string
     {
-        return 'Quotation Detail';
+        return 'Detail Penawaran Harga';
     }
 
     public function downloadPdf(): StreamedResponse

@@ -9,6 +9,7 @@ use Filament\Resources\Pages\EditRecord;
 class EditCategory extends EditRecord
 {
     protected static string $resource = CategoryResource::class;
+    protected static ?string $title = 'Ubah Kategori';
 
     protected function getHeaderActions(): array
     {

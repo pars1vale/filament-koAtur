@@ -22,8 +22,9 @@ class PaymentResource extends Resource
     protected static ?string $model = PurchasePayment::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-wallet';
+    protected static ?string $navigationLabel = 'Pembayaran Pembelian';
     protected static ?string $navigationGroup = 'Purchases';
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 3;
 
 protected static ?string $tenantRelationshipName = 'purchases_payment';
 
@@ -32,7 +33,7 @@ protected static ?string $tenantRelationshipName = 'purchases_payment';
         return $form
             ->schema([
                 Select::make('purchase_id')
-                    ->label('Purchase')
+                    ->label('Pembelian')
                     ->searchable()
                     ->preload()
                     ->relationship('purchase', 'reference')
@@ -48,20 +49,23 @@ protected static ?string $tenantRelationshipName = 'purchases_payment';
                     }),
 
                 TextInput::make('amount')
+                    ->label('Jumlah')
                     ->numeric()
                     ->required(),
 
                 DatePicker::make('date')
+                    ->label('Tanggal')
                     ->required()
                     ->default(now()),
 
                 TextInput::make('reference')
-                    ->label('Payment Reference')
+                    ->label('Referensi Pembayaran')
                     ->readOnly()
                     ->reactive()
                     ->dehydrated(),
 
                 Select::make('payment_method')
+                    ->label('Metode Pembayaran')
                     ->options([
                         'cash'        => 'Cash',
                         'credit_card' => 'Credit Card',
@@ -73,6 +77,8 @@ protected static ?string $tenantRelationshipName = 'purchases_payment';
                     ->required(),
 
                 Textarea::make('note')
+                    ->label('Catatan')
+                    ->placeholder('Catatan (opsional)')
                     ->nullable(),
             ]);
     }
@@ -81,12 +87,25 @@ protected static ?string $tenantRelationshipName = 'purchases_payment';
     {
         return $table
             ->columns([
-                TextColumn::make('id')->sortable(),
-                TextColumn::make('reference')->searchable(),
-                TextColumn::make('purchase.reference')->label('Purchase')->sortable()->searchable(),
-                TextColumn::make('amount')->money('idr', true),
-                TextColumn::make('payment_method')->badge(),
-                TextColumn::make('date')->date(),
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable(),
+                TextColumn::make('reference')
+                    ->label('No. Referensi')
+                    ->searchable(),
+                TextColumn::make('purchase.reference')
+                    ->label('Pembelian')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('amount')
+                    ->label('Jumlah')
+                    ->money('idr', true),
+                TextColumn::make('payment_method')
+                    ->label('Metode Pembayaran')
+                    ->badge(),
+                TextColumn::make('date')
+                    ->label('Tanggal')
+                    ->date(),
 
             ])
             ->filters([

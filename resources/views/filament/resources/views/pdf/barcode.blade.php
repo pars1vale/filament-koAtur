@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Barcode PDF</title>
+    <title>PDF Barcode</title>
     <style>
         body {
             font-family: sans-serif;

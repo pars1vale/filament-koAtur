@@ -20,8 +20,8 @@ class PaymentsReport extends Page implements Tables\Contracts\HasTable, Forms\Co
     use Forms\Concerns\InteractsWithForms;
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
-    protected static ?string $title = 'Payments Report';
-    protected static ?string $navigationGroup = 'Reports';
+    protected static ?string $title = 'Laporan Pembayaran';
+    protected static ?string $navigationGroup = 'Laporan';
     protected static ?int $navigationSort = 2;
 
     protected static string $view = 'filament.pages.reports.payments-report';
@@ -36,26 +36,31 @@ class PaymentsReport extends Page implements Tables\Contracts\HasTable, Forms\Co
         return [
             Forms\Components\Grid::make(2)
                 ->schema([
-                    DatePicker::make('start_date')->label('Start Date')->reactive(),
-                    DatePicker::make('end_date')->label('End Date')->reactive(),
+                    DatePicker::make('start_date')
+                        ->label('Tanggal Mulai')
+                        ->reactive(),
+                    DatePicker::make('end_date')
+                        ->label('Tanggal Selesai')
+                        ->reactive(),
                     Select::make('payment_type')
-                        ->label('Payment Type')
+                        ->label('Tipe Pembayaran')
                         ->options([
-                            'sales' => 'Sales',
-                            'sales_return' => 'Sale Returns',
-                            'purchase' => 'Purchase',
-                            'purchase_return' => 'Purchase Returns',
+                            'sales' => 'Penjualan',
+                            'sales_return' => 'Retur Penjualan',
+                            'purchase' => 'Pembelian',
+                            'purchase_return' => 'Retur Pembelian',
                         ])
                         ->default('sales')
                         ->reactive(),
                     Select::make('payment_method')
-                        ->label('Payment Method')
+                        ->label('Metode Pembayaran')
+                        ->placeholder('Pilih Opsi')
                         ->options([
                             'cash' => 'Cash',
                             'credit_card' => 'Credit Card',
                             'bank' => 'Bank Transfer',
                             'cheque' => 'Cheque',
-                            'other' => 'Other',
+                            'other' => 'Lainnya',
                         ])
                         ->reactive(),
                 ])
@@ -68,11 +73,21 @@ class PaymentsReport extends Page implements Tables\Contracts\HasTable, Forms\Co
         return $table
             ->query(fn() => $this->getFilteredQuery())
             ->columns([
-                TextColumn::make('date')->label('Date')->date('d M Y'),
-                TextColumn::make('reference')->label('Reference')->searchable(),
-                TextColumn::make('related_reference')->label('Related Reference')->searchable(),
-                TextColumn::make('amount')->label('Amount')->money('IDR'),
-                TextColumn::make('payment_method')->label('Payment Method')->badge(),
+                TextColumn::make('date')
+                    ->label('Tanggal')
+                    ->date('d M Y'),
+                TextColumn::make('reference')
+                    ->label('No. Referensi')
+                    ->searchable(),
+                TextColumn::make('related_reference')
+                    ->label('Referensi Terkait')
+                    ->searchable(),
+                TextColumn::make('amount')
+                    ->label('Jumlah')
+                    ->money('IDR'),
+                TextColumn::make('payment_method')
+                    ->label('Metode Pembayaran')
+                    ->badge(),
             ]);
     }
 

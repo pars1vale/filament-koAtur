@@ -19,12 +19,14 @@ class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
+    protected static ?string $navigationLabel = 'Kategori';
+    protected static ?int $navigationSort = 1;
     protected static ?string $navigationIcon = 'heroicon-o-tag';
 
     // Grouping to Products menu
     public static function getNavigationGroup(): ?string
     {
-        return 'Products';
+        return 'Produk';
     }
 
     // Menu order Position
@@ -38,11 +40,13 @@ class CategoryResource extends Resource
         return $form
             ->schema([
                 TextInput::make('category_code')
-                ->required()
-                ->maxLength(20),
+                    ->label('Kode Kategori')
+                    ->required()
+                    ->maxLength(20),
                 TextInput::make('category_name')
-                ->required()
-                ->maxlength(50),
+                    ->label('Nama Kategori')
+                    ->required()
+                    ->maxlength(50),
             ]);
     }
 
@@ -50,8 +54,10 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('category_code'),
-                TextColumn::make('category_name'),
+                TextColumn::make('category_code')
+                    ->label('Kode Kategori'),
+                TextColumn::make('category_name')
+                    ->label('Nama Kategori'),
             ])
             ->filters([
                 //

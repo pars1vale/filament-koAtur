@@ -27,10 +27,9 @@ class RoleResource extends Resource implements HasShieldPermissions
 
     protected static ?string $tenantOwnershipRelationshipName = null;
 
-    public static function getNavigationGroup(): ?string
-    {
-        return 'User Management';
-    }
+    protected static ?string $navigationLabel = 'Roles';
+    protected static ?string $navigationGroup = 'User Management';
+    protected static ?int $navigationSort = 2;
 
     public static function getPermissionPrefixes(): array
     {

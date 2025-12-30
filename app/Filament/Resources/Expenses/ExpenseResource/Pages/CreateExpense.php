@@ -9,4 +9,8 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateExpense extends CreateRecord
 {
     protected static string $resource = ExpenseResource::class;
+
+    protected static ?string $navigationLabel = 'Buat Pengeluaran';
+    protected static ?string $navigationGroup = 'Pengeluaran';
+    protected static ?string $title = 'Buat Pengeluaran';
 }

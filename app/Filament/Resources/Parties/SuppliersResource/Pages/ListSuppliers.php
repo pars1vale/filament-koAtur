@@ -9,13 +9,14 @@ use Filament\Resources\Pages\ListRecords;
 class ListSuppliers extends ListRecords
 {
     protected static string $resource = SuppliersResource::class;
+    protected static ?string $title = 'Supplier';
 
     protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make()
             ->modal(true)
-            ->modalHeading('Create Supplier')
+            ->modalHeading('Buat Supplier')
             ->modalWidth('md'),
         ];
     }

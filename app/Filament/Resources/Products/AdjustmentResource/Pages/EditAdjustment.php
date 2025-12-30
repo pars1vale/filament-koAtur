@@ -53,7 +53,7 @@ class EditAdjustment extends Page implements Forms\Contracts\HasForms
     {
         return [
             Forms\Components\Select::make('product_id')
-                ->label('Search Product')
+                ->label('Cari Produk')
                 ->searchable()
                 ->getSearchResultsUsing(
                     fn(string $query) =>
@@ -81,12 +81,12 @@ class EditAdjustment extends Page implements Forms\Contracts\HasForms
 
             Forms\Components\Group::make([
                 Forms\Components\TextInput::make('reference')
-                    ->label('Reference Code')
+                    ->label('Kode Referensi')
                     ->disabled()
                     ->default(fn() => $this->reference),
 
                 Forms\Components\DatePicker::make('adjustment_date')
-                    ->label('Date')
+                    ->label('Tanggal')
                     ->default(fn() => $this->adjustment_date)
                     ->required()
                     ->native(false),
@@ -151,7 +151,7 @@ class EditAdjustment extends Page implements Forms\Contracts\HasForms
         });
 
         Notification::make()
-            ->title('Stock adjustment updated successfully')
+            ->title('Penyesuaian stok berhasil diperbarui')
             ->success()
             ->send();
 

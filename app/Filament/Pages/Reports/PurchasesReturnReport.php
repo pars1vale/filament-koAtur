@@ -18,8 +18,8 @@ class PurchasesReturnReport extends Page implements Tables\Contracts\HasTable, F
     use Forms\Concerns\InteractsWithForms;
 
     protected static ?string $navigationIcon = 'heroicon-o-receipt-refund';
-    protected static ?string $title = 'Purchases Return Report';
-    protected static ?string $navigationGroup = 'Reports';
+    protected static ?string $title = 'Laporan Retur Pembelian';
+    protected static ?string $navigationGroup = 'Laporan';
     protected static ?int $navigationSort = 6;
 
     protected static string $view = 'filament.pages.reports.purchases-return-report';
@@ -35,10 +35,15 @@ class PurchasesReturnReport extends Page implements Tables\Contracts\HasTable, F
         return [
             Forms\Components\Grid::make(3)
                 ->schema([
-                    DatePicker::make('start_date')->label('Start Date')->reactive(),
-                    DatePicker::make('end_date')->label('End Date')->reactive(),
+                    DatePicker::make('start_date')
+                        ->label('Tanggal Mulai')
+                        ->reactive(),
+                    DatePicker::make('end_date')
+                        ->label('Tanggal Selesai')
+                        ->reactive(),
                     Select::make('supplier_id')
                         ->label('Supplier')
+                        ->placeholder('Pilih Opsi')
                         ->options(Supplier::pluck('supplier_name', 'id'))
                         ->searchable()
                         ->reactive(),
@@ -47,18 +52,20 @@ class PurchasesReturnReport extends Page implements Tables\Contracts\HasTable, F
                 ->schema([
                     Select::make('status')
                         ->label('Status')
+                        ->placeholder('Pilih Opsi')
                         ->options([
                             'pending' => 'Pending',
-                            'completed' => 'Completed',
-                            'cancelled' => 'Cancelled',
+                            'completed' => 'Selesai',
+                            'cancelled' => 'Dibatalkan',
                         ])
                         ->reactive(),
                     Select::make('payment_status')
-                        ->label('Payment Status')
+                        ->label('Status Pembayaran')
+                        ->placeholder('Pilih Opsi')
                         ->options([
-                            'unpaid' => 'Unpaid',
-                            'paid' => 'Paid',
-                            'partial' => 'Partial',
+                            'unpaid' => 'Belum Dibayar',
+                            'paid' => 'Sudah Dibayar',
+                            'partial' => 'Dibayar Sebagian',
                         ])
                         ->reactive(),
                 ]),
@@ -71,11 +78,11 @@ class PurchasesReturnReport extends Page implements Tables\Contracts\HasTable, F
             ->query(fn() => $this->getFilteredQuery())
             ->columns([
                 TextColumn::make('date')
-                    ->label('Date')
+                    ->label('Tanggal')
                     ->date('d M Y'),
 
                 TextColumn::make('reference')
-                    ->label('Reference')
+                    ->label('No. Referensi')
                     ->searchable(),
 
                 TextColumn::make('supplier.supplier_name')
@@ -90,16 +97,16 @@ class PurchasesReturnReport extends Page implements Tables\Contracts\HasTable, F
                     ->money('IDR'),
 
                 TextColumn::make('paid_amount')
-                    ->label('Paid')
+                    ->label('Sudah Dibayar')
                     ->money('IDR'),
 
                 TextColumn::make('due_amount')
-                    ->label('Due')
+                    ->label('Sisa Bayar')
                     ->money('IDR')
                     ->color(fn ($record) => $record->due_amount > 0 ? 'danger' : 'success'),
 
                 TextColumn::make('payment_status')
-                    ->label('Payment Status')
+                    ->label('Status Pembayaran')
                     ->badge(),
             ]);
     }

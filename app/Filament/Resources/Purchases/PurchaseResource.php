@@ -26,8 +26,9 @@ class PurchaseResource extends Resource
     protected static ?string $model = Purchase::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
+    protected static ?string $navigationLabel = 'Pembelian';
     protected static ?string $navigationGroup = 'Purchases';
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 2;
 
     // Helper perhitungan
     public static function calculateTax(callable $set, callable $get, float $baseTotal): float
@@ -138,7 +139,7 @@ class PurchaseResource extends Resource
         return $form
             ->schema([
                 TextInput::make('reference')
-                    ->label('Reference')
+                    ->label('No. Referensi')
                     ->readOnly()
                     ->dehydrated(true)
                     ->placeholder(function () {
@@ -149,24 +150,28 @@ class PurchaseResource extends Resource
 
                 Select::make('supplier_id')
                     ->label('Supplier')
+                    ->placeholder('Pilih Opsi')
                     ->relationship('supplier', 'supplier_name')
                     ->required()
                     ->live()
                     ->afterStateUpdated(fn ($state, $set, $get) => self::calculateGrandTotal($set, $get)),
 
                 DateTimePicker::make('date')
+                    ->label('Tanggal Pembelian')
                     ->default(now())
-                    ->required()
-                    ->label('Purchase Date'),
+                    ->required(),
 
-                Section::make('Product Details')
+                Section::make('Detail Produk')
                     ->schema([
                         Repeater::make('details')
+                            ->label('Detail Produk')
                             ->relationship('product_details')
                             ->schema([
                                 Hidden::make('id'),
 
                                 Select::make('product_id')
+                                    ->label('Produk')
+                                    ->placeholder('Pilih Opsi')
                                     ->relationship('product', 'product_name')
                                     ->preload()
                                     ->searchable()
@@ -189,10 +194,11 @@ class PurchaseResource extends Resource
                                     }),
 
                                 TextInput::make('product_code')
-                                    ->label('Product Code')
+                                    ->label('Kode Produk')
                                     ->readOnly(),
 
                                 TextInput::make('quantity')
+                                    ->label('Jumlah')
                                     ->numeric()
                                     ->default(1)
                                     ->required()
@@ -206,13 +212,14 @@ class PurchaseResource extends Resource
                                     }),
 
                                 TextInput::make('unit_price')
+                                    ->label('Harga Satuan')
                                     ->numeric()
                                     ->required()
                                     ->readOnly()
                                     ->default(0),
 
                                 TextInput::make('product_discount_amount')
-                                    ->label('Discount')
+                                    ->label('Diskon')
                                     ->numeric()
                                     ->default(0)
                                     ->live()
@@ -225,9 +232,10 @@ class PurchaseResource extends Resource
                                     }),
 
                                 Select::make('product_discount_type')
+                                    ->label('Tipe Diskon Produk')
                                     ->options([
-                                        'fixed' => 'Fixed',
-                                        'percent' => 'Percent',
+                                        'fixed' => 'Tetap',
+                                        'percent' => 'Persen',
                                     ])
                                     ->default('percent')
                                     ->live()
@@ -240,13 +248,14 @@ class PurchaseResource extends Resource
                                     }),
 
                                 TextInput::make('product_tax_amount')
-                                    ->label('Tax Amount')
+                                    ->label('Total Pajak')
                                     ->numeric()
                                     ->default(0)
                                     ->readOnly()
                                     ->dehydrated(true),
 
                                 TextInput::make('sub_total')
+                                    ->label('Subtotal')
                                     ->numeric()
                                     ->default(0)
                                     ->readOnly()
@@ -254,7 +263,7 @@ class PurchaseResource extends Resource
                                     ->columnSpanFull(),
                             ])
                             ->columns(3)
-                            ->addActionLabel('Add Product')
+                            ->addActionLabel('Tambah Produk')
                             ->live()
                             ->afterStateUpdated(function ($state, $set, $get) {
                                 self::calculateGrandTotal($set, $get);
@@ -267,49 +276,49 @@ class PurchaseResource extends Resource
                     ->collapsed(false),
 
                 // Global Discounts and Taxes
-                Section::make('Global Adjustments')
+                Section::make('Penyesuaian Global')
                     ->schema([
                         TextInput::make('tax_percentage')
+                            ->label('Persentase Pajak (%)')
                             ->numeric()
                             ->default(0)
-                            ->label('Tax Percentage (%)')
                             ->live()
                             ->afterStateUpdated(fn ($state, $set, $get) => self::calculateGrandTotal($set, $get)),
 
                         TextInput::make('tax_amount')
+                            ->label('Total Pajak')
                             ->numeric()
                             ->readOnly()
-                            ->label('Tax Amount')
                             ->dehydrated(true),
 
                         TextInput::make('discount_percentage')
+                            ->label('Tarif Diskon (%)')
                             ->numeric()
                             ->default(0)
-                            ->label('Discount Percentage (%)')
                             ->live()
                             ->afterStateUpdated(fn ($state, $set, $get) => self::calculateGrandTotal($set, $get)),
 
                         TextInput::make('discount_amount')
+                            ->label('Total Diskon')
                             ->numeric()
                             ->readOnly()
-                            ->label('Discount Amount')
                             ->dehydrated(true),
                     ])
                     ->columns(2),
 
                 // Totals Section
-                Section::make('Totals')
+                Section::make('Total')
                     ->schema([
                         TextInput::make('total_amount')
-                            ->label('Total Amount')
+                            ->label('Total Keseluruhan')
                             ->numeric()
                             ->readOnly()
                             ->dehydrated(true)
                             ->prefix('IDR'),
 
                         TextInput::make('paid_amount')
+                            ->label('Jumlah Dibayar')
                             ->numeric()
-                            ->label('Paid Amount')
                             ->required()
                             ->default(0)
                             ->live(onBlur: true)
@@ -317,7 +326,7 @@ class PurchaseResource extends Resource
                             ->prefix('IDR'),
 
                         TextInput::make('due_amount')
-                            ->label('Due Amount')
+                            ->label('Sisa Bayar')
                             ->numeric()
                             ->readOnly()
                             ->dehydrated(true)
@@ -329,28 +338,28 @@ class PurchaseResource extends Resource
                 Section::make('Status')
                     ->schema([
                         Select::make('status')
-                            ->label('Purchase Status')
+                            ->label('Status Pembelian')
                             ->options([
                                 'pending' => 'Pending',
-                                'completed' => 'Completed',
-                                'cancelled' => 'Cancelled',
+                                'completed' => 'Selesai',
+                                'cancelled' => 'Dibatalkan',
                             ])
                             ->default('pending')
                             ->required(),
 
                         Select::make('payment_status')
-                            ->label('Payment Status')
+                            ->label('Status Pembayaran')
                             ->options([
-                                'unpaid' => 'Unpaid',
-                                'paid' => 'Paid',
-                                'partial' => 'Partial',
+                                'unpaid' => 'Belum Dibayar',
+                                'paid' => 'Sudah Dibayar',
+                                'partial' => 'Dibayar Sebagian',
                             ])
                             ->default('unpaid')
                             ->required()
                             ->dehydrated(),
 
                         Select::make('payment_method')
-                            ->label('Payment Method')
+                            ->label('Metode Pembayaran')
                             ->options([
                                 'cash' => 'Cash',
                                 'credit_card' => 'Credit Card',
@@ -364,6 +373,8 @@ class PurchaseResource extends Resource
                     ->columns(3),
 
                 Textarea::make('note')
+                    ->label('Catatan')
+                    ->placeholder('Catatan (opsional)')
                     ->nullable()
                     ->columnSpanFull(),
             ]);
@@ -373,13 +384,25 @@ class PurchaseResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('reference')->searchable(),
-                TextColumn::make('supplier.supplier_name')->searchable(),
-                TextColumn::make('date'),
-                TextColumn::make('status'),
-                TextColumn::make('paid_amount')->money('idr'),
-                TextColumn::make('total_amount')->money('idr'),
-                TextColumn::make('due_amount')->money('idr'),
+                TextColumn::make('reference')
+                    ->label('No. Referensi')
+                    ->searchable(),
+                TextColumn::make('supplier.supplier_name')
+                    ->label('Supplier')
+                    ->searchable(),
+                TextColumn::make('date')
+                    ->label('Tanggal'),
+                TextColumn::make('status')
+                    ->label('Status'),
+                TextColumn::make('paid_amount')
+                    ->label('Jumlah Dibayar')
+                    ->money('idr'),
+                TextColumn::make('total_amount')
+                    ->label('Total Keseluruhan')
+                    ->money('idr'),
+                TextColumn::make('due_amount')
+                    ->label('Sisa Bayar')
+                    ->money('idr'),
             ])
             ->filters([
                 //

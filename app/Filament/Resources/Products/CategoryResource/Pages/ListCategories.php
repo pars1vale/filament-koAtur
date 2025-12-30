@@ -9,14 +9,16 @@ use Filament\Resources\Pages\ListRecords;
 class ListCategories extends ListRecords
 {
     protected static string $resource = CategoryResource::class;
+    protected static ?string $title = 'Kategori';
 
     protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make()
-            ->modal(true)
-            ->modalWidth('md')
-            ->modalHeading('Create Category'),
+                ->label('Kategori Baru')
+                ->modal(true)
+                ->modalWidth('md')
+                ->modalHeading('Buat Kategori'),
         ];
     }
 }

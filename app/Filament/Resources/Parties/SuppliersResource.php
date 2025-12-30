@@ -21,6 +21,9 @@ class SuppliersResource extends Resource
     protected static ?string $model = Supplier::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user';
+    protected static ?string $navigationLabel = 'Supplier';
+    protected static ?string $navigationGroup = 'Parties';
+    protected static ?int $navigationSort = 2;
 
     // Grouping to parties menu
     public static function getNavigationGroup(): ?string
@@ -39,22 +42,28 @@ class SuppliersResource extends Resource
         return $form
             ->schema([
                 TextInput::make('supplier_name')
+                    ->label('Nama Supplier')
                     ->required()
                     ->maxLength(50),
                 TextInput::make('supplier_email')
+                    ->label('Email Supplier')
                     ->required()
                     ->email()
                     ->maxLength(100),
                 TextInput::make('supplier_phone')
+                    ->label('Telepon Supplier')
                     ->required()
                     ->maxLength(20),
                 TextInput::make('city')
+                    ->label('Kota')
                     ->required()
                     ->maxLength(50),
                 TextInput::make('country')
+                    ->label('Negara')
                     ->required()
                     ->maxLength(50),
                 Textarea::make('address')
+                    ->label('Alamat')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -64,12 +73,18 @@ class SuppliersResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('supplier_name'),
-                TextColumn::make('supplier_email'),
-                TextColumn::make('supplier_phone'),
-                TextColumn::make('city'),
-                TextColumn::make('country'),
+                TextColumn::make('supplier_name')
+                    ->label('Nama Supplier'),
+                TextColumn::make('supplier_email')
+                    ->label('Email Supplier'),
+                TextColumn::make('supplier_phone')
+                    ->label('Telepon Supplier'),
+                TextColumn::make('city')
+                    ->label('Kota'),
+                TextColumn::make('country')
+                    ->label('Negara'),
                 TextColumn::make('address')
+                    ->label('Alamat')
                     ->wrap(),
             ])
             ->filters([

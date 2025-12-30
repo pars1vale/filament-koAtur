@@ -9,13 +9,14 @@ use Filament\Resources\Pages\ListRecords;
 class ListUnits extends ListRecords
 {
     protected static string $resource = UnitsResource::class;
+    protected static ?string $title = 'Satuan';
 
     protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make()
             ->modal(true)
-            ->modalHeading('Create Unit')
+            ->modalHeading('Buat Satuan')
             ->modalWidth('md')
         ];
     }

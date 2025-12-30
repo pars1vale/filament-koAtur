@@ -20,10 +20,11 @@ class PrintBarcode extends Page implements HasForms, HasTable
 
     protected static string $view = 'filament.pages.print-barcode';
 
-    protected static ?string $navigationLabel = 'Print Barcode';
-    protected static ?string $navigationGroup = 'Products';
-    protected static ?string $navigationIcon = 'heroicon-o-qr-code';
+    protected static ?string $navigationLabel = 'Cetak Barcode';
+    protected static ?string $navigationGroup = 'Produk';
     protected static ?int $navigationSort = 3;
+    protected static ?string $title = 'Cetak Barcode';
+    protected static ?string $navigationIcon = 'heroicon-o-qr-code';
 
     public ?int $product_id = null;
     public ?int $barcode_qty = 1;
@@ -38,7 +39,7 @@ class PrintBarcode extends Page implements HasForms, HasTable
     {
         return [
             Forms\Components\Select::make('product_id')
-                ->label('Search Product')
+                ->label('Cari Produk')
                 ->searchable()
                 ->getSearchResultsUsing(fn (string $query) =>
                     Product::query()

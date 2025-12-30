@@ -9,6 +9,7 @@ use Filament\Resources\Pages\ListRecords;
 class ListPaymentReturns extends ListRecords
 {
     protected static string $resource = PaymentReturnResource::class;
+    protected static ?string $title = 'Pengembalian Pembayaran';
 
     protected function getHeaderActions(): array
     {

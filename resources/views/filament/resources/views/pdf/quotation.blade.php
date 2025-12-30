@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Quotation - {{ $quotation->reference }}</title>
+    <title>Penawaran - {{ $quotation->reference }}</title>
     <style>
         body {
             font-family: DejaVu Sans, sans-serif;
@@ -60,21 +60,21 @@
 
 <body>
     <div class="header">
-        <h2>Quotation</h2>
-        <p>Reference: <strong>{{ $quotation->reference }}</strong></p>
+        <h2>Penawaran</h2>
+        <p>No. Referensi: <strong>{{ $quotation->reference }}</strong></p>
     </div>
 
     <div class="info">
         <div class="company-info">
-            <h4>Company Info</h4>
+            <h4>Info Perusahaan</h4>
             <p><strong>My Company</strong></p>
             <p>123 Business Street</p>
             <p>Email: info@company.com</p>
-            <p>Phone: +62 812 3456 7890</p>
+            <p>Telepon: +62 812 3456 7890</p>
         </div>
 
         <div class="customer-info">
-            <h4>Customer Info</h4>
+            <h4>Info Pelanggan</h4>
             <p><strong>{{ $quotation->customer?->customer_name ?? '-' }}</strong></p>
             <p>{{ $quotation->customer?->address ?? '-' }}</p>
             <p>{{ $quotation->customer?->customer_email ?? '-' }}</p>
@@ -82,11 +82,11 @@
         </div>
 
         <div class="invoice-info">
-            <h4>Invoice Info</h4>
-            <p>Reference: <strong>{{ $quotation->reference }}</strong></p>
-            <p>Date: {{ $quotation->date ? \Carbon\Carbon::parse($quotation->date)->format('d M Y') : '-' }}</p>
+            <h4>Rincian Faktur</h4>
+            <p>Penawaran: <strong>{{ $quotation->reference }}</strong></p>
+            <p>Tanggal: {{ $quotation->date ? \Carbon\Carbon::parse($quotation->date)->format('d M Y') : '-' }}</p>
             <p>Status: <strong>{{ ucfirst($quotation->status ?? 'Pending') }}</strong></p>
-            <p>Payment Status:</p>
+            <p>Status Pembayaran:</p>
         </div>
     </div>
 
@@ -94,11 +94,11 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>Product</th>
-                <th>Net Unit Price</th>
-                <th>Quantity</th>
-                <th>Discount</th>
-                <th>Tax</th>
+                <th>Produk</th>
+                <th>Harga Satuan Bersih</th>
+                <th>Jumlah</th>
+                <th>Diskon</th>
+                <th>Pajak</th>
                 <th>Subtotal</th>
             </tr>
         </thead>
@@ -120,19 +120,19 @@
     <div class="totals">
         <table>
             <tr>
-                <td>Discount ({{ $quotation->discount_percentage ?? 0 }}%)</td>
+                <td>Diskon ({{ $quotation->discount_percentage ?? 0 }}%)</td>
                 <td>Rp {{ number_format($quotation->discount_amount, 0, ',', '.') }}</td>
             </tr>
             <tr>
-                <td>Tax ({{ $quotation->tax_percentage ?? 0 }}%)</td>
+                <td>Pajak ({{ $quotation->tax_percentage ?? 0 }}%)</td>
                 <td>Rp {{ number_format($quotation->tax_amount, 0, ',', '.') }}</td>
             </tr>
             <tr>
-                <td>Shipping</td>
+                <td>Pengiriman</td>
                 <td>Rp {{ number_format($quotation->shipping_amount, 0, ',', '.') }}</td>
             </tr>
             <tr>
-                <td><strong>Grand Total</strong></td>
+                <td><strong>Total Keseluruhan</strong></td>
                 <td><strong>Rp {{ number_format($quotation->total_amount, 0, ',', '.') }}</strong></td>
             </tr>
         </table>

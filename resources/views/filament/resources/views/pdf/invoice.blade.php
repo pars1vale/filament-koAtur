@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Invoice</title>
+    <title>Faktur</title>
 
     <style>
         body {
@@ -68,22 +68,22 @@
 
 <body>
 
-    <div class="title">INVOICE</div>
-    <div class="subtitle">Generated Automatically by POS System</div>
+    <div class="title">FAKTUR</div>
+    <div class="subtitle">Dibuat Otomatis oleh Sistem POS</div>
 
     <table>
         <tr>
-            <td><strong>Customer:</strong> {{ $customerName ?: '-' }}</td>
-            <td class="right"><strong>Date:</strong> {{ $invoiceTime->format('d/m/Y H:i') }}</td>
+            <td><strong>Pelanggan:</strong> {{ $customerName ?: '-' }}</td>
+            <td class="right"><strong>Tanggal:</strong> {{ $invoiceTime->format('d/m/Y H:i') }}</td>
         </tr>
     </table>
 
     <table>
         <thead>
             <tr>
-                <th width="40%">Product</th>
-                <th width="10%" class="right">Qty</th>
-                <th width="25%" class="right">Price</th>
+                <th width="40%">Produk</th>
+                <th width="10%" class="right">Jmlh</th>
+                <th width="25%" class="right">Harga</th>
                 <th width="25%" class="right">Total</th>
             </tr>
         </thead>
@@ -108,20 +108,19 @@
 
         <tr>
             <td>
-                <strong>Discount ({{ $discountPercent }}%)</strong>
+                <strong>Diskon ({{ $discountPercent }}%)</strong>
             </td>
             <td class="right">- Rp {{ number_format($discountAmount) }}</td>
         </tr>
 
         <tr>
-            <td><strong>Grand Total</strong></td>
+            <td><strong>Total Keseluruhan</strong></td>
             <td class="right"><strong>Rp {{ number_format($total) }}</strong></td>
         </tr>
     </table>
 
     <div class="footer-text">
-        Thank you for your purchase!
-        <br> Powered by Laravel + Filament POS
+        Terima kasih atas pembelian Anda!
     </div>
 
 </body>

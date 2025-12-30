@@ -9,6 +9,7 @@ use Filament\Resources\Pages\EditRecord;
 class EditUnits extends EditRecord
 {
     protected static string $resource = UnitsResource::class;
+    protected static ?string $title = 'Ubah Satuan';
 
     protected function getHeaderActions(): array
     {

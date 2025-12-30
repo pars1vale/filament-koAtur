@@ -21,9 +21,10 @@ class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = 'Products';
+    protected static ?string $navigationLabel = 'Produk';
+    protected static ?string $navigationGroup = 'Produk';
     protected static ?int $navigationSort = 2;
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
@@ -32,9 +33,11 @@ class ProductResource extends Resource
                 Forms\Components\Hidden::make('outlet_id')
                     ->default(fn () => Filament::getTenant()?->id)
                     ->required(),
-                Forms\Components\TextInput::make('product_name')->required(),
+                Forms\Components\TextInput::make('product_name')
+                    ->label('Nama Produk')
+                    ->required(),
                 Forms\Components\TextInput::make('product_code')
-                    ->label('Product Code')
+                    ->label('Kode Produk')
                     ->default(fn () => 
                         Filament::getTenant()
                             ? Product::generateProductCode(Filament::getTenant()->id)
@@ -54,22 +57,45 @@ class ProductResource extends Resource
                             )
                     ),
                 Forms\Components\Select::make('category_id')
+                    ->label('Kategori')
                     ->relationship('category', 'category_name')
                     ->required(),
                 Forms\Components\Select::make('unit_id')
+                    ->label('Satuan')
                     ->relationship('unit', 'name')
                     ->required(),
-                Forms\Components\TextInput::make('product_cost')->numeric()->required(),
-                Forms\Components\TextInput::make('product_price')->numeric()->required(),
-                Forms\Components\TextInput::make('product_quantity')->numeric()->required(),
-                Forms\Components\TextInput::make('product_stock_alert')->numeric()->default(0),
-                Forms\Components\TextInput::make('product_order_tax')->label('Tax (%)')->numeric()->nullable(),
-                Forms\Components\Select::make('product_tax_type')->options([
-                    0 => 'Exclusive',
-                    1 => 'Inclusive',
-                ])->nullable(),
-                Forms\Components\Textarea::make('product_note')->nullable(),
+                Forms\Components\TextInput::make('product_cost')
+                    ->label('Biaya Produk')
+                    ->numeric()
+                    ->required(),
+                Forms\Components\TextInput::make('product_price')
+                    ->label('Harga Jual')
+                    ->numeric()
+                    ->required(),
+                Forms\Components\TextInput::make('product_quantity')
+                    ->label('Jumlah Produk')
+                    ->numeric()
+                    ->required(),
+                Forms\Components\TextInput::make('product_stock_alert')
+                    ->label('Notifikasi Stok Produk')
+                    ->numeric()
+                    ->default(0),
+                Forms\Components\TextInput::make('product_order_tax')
+                    ->label('Pajak (%)')
+                    ->numeric()
+                    ->nullable(),
+                Forms\Components\Select::make('product_tax_type')
+                    ->label('Jenis Pajak Produk')
+                    ->options([
+                        0 => 'Exclusive',
+                        1 => 'Inclusive',
+                    ])
+                    ->nullable(),
+                Forms\Components\Textarea::make('product_note')
+                    ->label('Catatan Produk')
+                    ->nullable(),
                 Forms\Components\FileUpload::make('product_image')
+                    ->label('Gambar Produk')
                     ->disk('public')
                     ->directory('products')
                     ->image()
@@ -83,15 +109,25 @@ class ProductResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\ImageColumn::make('product_image')
-                    ->label('Image')
+                    ->label('Gambar')
                     ->disk('public')
                     ->size(60),
-                Tables\Columns\TextColumn::make('category.category_name')->label('Category'),
-                Tables\Columns\TextColumn::make('product_code')->label('Code')->searchable(),
-                Tables\Columns\TextColumn::make('product_name')->label('Name')->searchable(),
-                Tables\Columns\TextColumn::make('product_cost')->label('Cost')->money('idr'),
-                Tables\Columns\TextColumn::make('product_price')->label('Price')->money('idr'),
-                Tables\Columns\TextColumn::make('product_quantity')->label('Quantity'),
+                Tables\Columns\TextColumn::make('category.category_name')
+                    ->label('Kategori'),
+                Tables\Columns\TextColumn::make('product_code')
+                    ->label('Kode')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('product_name')
+                    ->label('Nama')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('product_cost')
+                    ->label('Biaya')
+                    ->money('idr'),
+                Tables\Columns\TextColumn::make('product_price')
+                    ->label('Harga')
+                    ->money('idr'),
+                Tables\Columns\TextColumn::make('product_quantity')
+                    ->label('Jumlah'),
             ])
             ->filters([
                 //
@@ -117,24 +153,36 @@ class ProductResource extends Resource
                     Grid::make(3)
                         ->schema([
                             Group::make([
-                                TextEntry::make('product_name')->label('Product'),
-                                TextEntry::make('category.category_name')->label('Category'),
-                                TextEntry::make('unit.name')->label('Unit'),
-                                TextEntry::make('product_code')->label('SKU'),
-                                TextEntry::make('product_stock_alert')->label('Minimum Qty'),
+                                TextEntry::make('product_name')
+                                    ->label('Produk'),
+                                TextEntry::make('category.category_name')
+                                    ->label('Kategori'),
+                                TextEntry::make('unit.name')
+                                    ->label('Satuan'),
+                                TextEntry::make('product_code')
+                                    ->label('Kode Produk (SKU)'),
+                                TextEntry::make('product_stock_alert')
+                                    ->label('Jumlah Minimum'),
                             ]),
                             Group::make([
-                                TextEntry::make('product_quantity')->label('Quantity'),
-                                TextEntry::make('product_order_tax')->label('Tax')->suffix('%'),
-                                TextEntry::make('product_tax_type')->label('Discount Type'),
-                                TextEntry::make('product_price')->label('Price')->money('idr'),
-                                TextEntry::make('product_note')->label('Description'),
+                                TextEntry::make('product_quantity')
+                                    ->label('Jumlah'),
+                                TextEntry::make('product_order_tax')
+                                    ->label('Pajak')
+                                    ->suffix('%'),
+                                TextEntry::make('product_tax_type')
+                                    ->label('Jenis Diskon'),
+                                TextEntry::make('product_price')
+                                    ->label('Harga')
+                                    ->money('idr'),
+                                TextEntry::make('product_note')
+                                    ->label('Deskripsi'),
                             ]),
                             Group::make([
                                 ImageEntry::make('product_image')
+                                    ->label('Gambar')
                                     ->disk('public')
-                                    ->height(250)
-                                    ->label('Image'),
+                                    ->height(250),
                             ]),
                         ]),
                 ]),

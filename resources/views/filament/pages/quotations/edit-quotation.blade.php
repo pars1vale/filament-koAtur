@@ -8,13 +8,13 @@
             <table class="table-auto w-full border border-gray-300 text-sm">
                 <thead class="bg-gray-100">
                     <tr>
-                        <th class="border px-3 py-2">Product</th>
-                        <th class="border px-3 py-2">Net Unit Price</th>
-                        <th class="border px-3 py-2">Stock</th>
-                        <th class="border px-3 py-2">Quantity</th>
-                        <th class="border px-3 py-2">Tax</th>
-                        <th class="border px-3 py-2">Sub Total</th>
-                        <th class="border px-3 py-2">Action</th>
+                        <th class="border px-3 py-2">Produk</th>
+                        <th class="border px-3 py-2">Harga Bersih per Unit</th>
+                        <th class="border px-3 py-2">Stok</th>
+                        <th class="border px-3 py-2">Jumlah</th>
+                        <th class="border px-3 py-2">Pajak</th>
+                        <th class="border px-3 py-2">Subtotal</th>
+                        <th class="border px-3 py-2">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -46,7 +46,7 @@
                     @empty
                         <tr>
                             <td colspan="8" class="text-center text-gray-500 py-4">
-                                No products added yet.
+                                Belum ada produk yang ditambahkan.
                             </td>
                         </tr>
                     @endforelse
@@ -57,16 +57,16 @@
         <div class="mt-4 flex justify-end">
             <div class="text-right">
                 <p class="font-semibold text-md">
-                    Tax ({{ $tax_percentage }}%): Rp {{ number_format($tax_amount, 0, ',', '.') }}
+                    Pajak ({{ $tax_percentage }}%): Rp {{ number_format($tax_amount, 0, ',', '.') }}
                 </p>
                 <p class="font-semibold text-md">
-                    Discount ({{ $discount_percentage }}%): Rp {{ number_format($discount_amount, 0, ',', '.') }}
+                    Diskon ({{ $discount_percentage }}%): Rp {{ number_format($discount_amount, 0, ',', '.') }}
                 </p>
                 <p class="font-semibold text-md">
-                    Shipping: Rp {{ number_format($shipping_amount, 0, ',', '.') }}
+                    Pengiriman: Rp {{ number_format($shipping_amount, 0, ',', '.') }}
                 </p>
                 <p class="font-semibold text-md">
-                    Grand Total: Rp {{ number_format($grand_total, 0, ',', '.') }}
+                    Total Keseluruhan: Rp {{ number_format($grand_total, 0, ',', '.') }}
                 </p>
             </div>
         </div>
@@ -75,19 +75,19 @@
             <div class="flex flex-wrap items-center gap-4 w-full">
 
                 <div class="flex flex-col flex-1 min-w-[150px]">
-                    <label class="text-sm font-medium mb-1">Tax (%)</label>
+                    <label class="text-sm font-medium mb-1">Pajak (%)</label>
                     <input type="number" min="0" wire:model.live="tax_percentage"
                         class="w-full border border-gray-600 rounded-md h-9 px-2 focus:ring-primary-500 focus:border-primary-500" />
                 </div>
 
                 <div class="flex flex-col flex-1 min-w-[150px]">
-                    <label class="text-sm font-medium mb-1">Discount (%)</label>
+                    <label class="text-sm font-medium mb-1">Diskon (%)</label>
                     <input type="number" min="0" wire:model.live="discount_percentage"
                         class="w-full border border-gray-600 rounded-md h-9 px-2 focus:ring-primary-500 focus:border-primary-500" />
                 </div>
 
                 <div class="flex flex-col flex-1 min-w-[150px]">
-                    <label class="text-sm font-medium mb-1">Shipping</label>
+                    <label class="text-sm font-medium mb-1">Pengiriman</label>
                     <input type="number" min="0" wire:model.live="shipping_amount"
                         class="w-full border border-gray-600 rounded-md h-9 px-2 focus:ring-primary-500 focus:border-primary-500" />
                 </div>
@@ -96,20 +96,20 @@
                     <label class="text-sm font-medium mb-1">Status</label>
                     <select wire:model="status"
                         class="w-full border border-gray-600 rounded-md h-9 px-2 focus:ring-primary-500 focus:border-primary-500">
-                        <option value="Pending">Pending</option>
-                        <option value="Sent">Sent</option>
+                        <option value="Pending">Tertunda</option>
+                        <option value="Sent">Terkirim</option>
                     </select>
                 </div>
             </div>
 
             <div class="pt-4">
                 <textarea wire:model="note" rows="2" class="w-full rounded-md"
-                    placeholder="Note (optional)"></textarea>
+                    placeholder="Catatan (opsional)"></textarea>
             </div>
 
             <div class="pt-2">
                 <x-filament::button wire:click="update" color="primary" class="mt-2 md:mt-0">
-                    Update Quotation
+                    Ubah Penawaran
                 </x-filament::button>
             </div>
         </div>

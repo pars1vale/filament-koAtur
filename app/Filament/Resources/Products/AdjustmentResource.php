@@ -23,8 +23,8 @@ class AdjustmentResource extends Resource
     protected static ?string $model = Adjustment::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationLabel = 'Adjustments';
-    protected static ?string $navigationGroup = 'Stock Adjustments';
+    protected static ?string $navigationLabel = 'Penyesuaian';
+    protected static ?string $navigationGroup = 'Penyesuaian Stok';
 
     public static function form(Form $form): Form
     {
@@ -40,18 +40,18 @@ class AdjustmentResource extends Resource
             ->query(Adjustment::query()->with('products'))
             ->columns([
                 Tables\Columns\TextColumn::make('date')
-                    ->label('Date')
+                    ->label('Tanggal')
                     ->date('M d, Y')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('reference')
-                    ->label('Reference')
+                    ->label('No. Referensi')
                     ->searchable()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('products_count')
-                    ->counts('products')
-                    ->label('Products'),
+                    ->label('Produk')
+                    ->counts('products'),
 
             ])
             ->actions([
@@ -71,24 +71,27 @@ class AdjustmentResource extends Resource
                 Grid::make(2)
                     ->schema([
                         TextEntry::make('date')
-                            ->label('Date')
+                            ->label('Tanggal')
                             ->date('d M, Y'),
 
                         TextEntry::make('reference')
-                            ->label('Reference'),
+                            ->label('No. Referensi'),
                     ]),
 
                 RepeatableEntry::make('products')
                     ->label('')
                     ->schema([
-                        TextEntry::make('product.product_name')->label('Product Name'),
-                        TextEntry::make('product.product_code')->label('Code'),
-                        TextEntry::make('quantity')->label('Quantity'),
+                        TextEntry::make('product.product_name')
+                            ->label('Nama Produk'),
+                        TextEntry::make('product.product_code')
+                            ->label('Kode Produk'),
+                        TextEntry::make('quantity')
+                            ->label('Jumlah'),
                         TextEntry::make('type')
-                            ->label('Type')
+                            ->label('Tipe')
                             ->formatStateUsing(fn(string $state) => $state === 'add'
-                                ? '(+) Addition'
-                                : '(-) Subtraction'),
+                                ? '(+) Tambah'
+                                : '(-) Kurang'),
                     ])
                     ->columns(4)
                     ->contained(false)

@@ -9,6 +9,7 @@ use Filament\Resources\Pages\ListRecords;
 class ListSaleReturns extends ListRecords
 {
     protected static string $resource = SaleReturnResource::class;
+    protected static ?string $title = 'Retur Penjualan';
 
     protected function getHeaderActions(): array
     {

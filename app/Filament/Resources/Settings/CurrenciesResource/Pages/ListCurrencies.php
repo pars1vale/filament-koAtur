@@ -9,13 +9,14 @@ use Filament\Resources\Pages\ListRecords;
 class ListCurrencies extends ListRecords
 {
     protected static string $resource = CurrenciesResource::class;
+    protected static ?string $title = 'Mata Uang';
 
     protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make()
             ->modal(true)
-            ->modalHeading('Create Currency')
+            ->modalHeading('Buat Mata Uang')
             ->modalWidth('md')
         ];
     }

@@ -9,13 +9,14 @@ use Filament\Resources\Pages\ListRecords;
 class ListCustomers extends ListRecords
 {
     protected static string $resource = CustomerResource::class;
+    protected static ?string $title = 'Pelanggan';
 
     protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make()
                 ->modal(true)
-                ->modalHeading('Create Customer')
+                ->modalHeading('Buat Pelanggan')
                 ->modalWidth('md')
         ];
     }

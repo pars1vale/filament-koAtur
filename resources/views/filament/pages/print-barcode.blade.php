@@ -7,10 +7,10 @@
         <table class="table-auto w-full mt-2 border border-gray-300 text-sm">
             <thead>
                 <tr>
-                    <th class="border px-4 py-2">Product Name</th>
-                    <th class="border px-4 py-2">Product Code</th>
-                    <th class="border px-4 py-2">Number of Barcodes</th>
-                    <th class="border px-4 py-2">Action</th>
+                    <th class="border px-4 py-2">Nama Produk</th>
+                    <th class="border px-4 py-2">Kode Produk</th>
+                    <th class="border px-4 py-2">Jumlah Barcode</th>
+                    <th class="border px-4 py-2">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -23,16 +23,19 @@
                                 class="w-full h-10 rounded-lg" />
                         </td>
                         <td class="border px-4 py-2 text-center">
-                            <button type="button" wire:click="removeItem({{ $item['id'] }})" title="Remove"
-                                class="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg">
-                                @svg('heroicon-o-trash', 'w-5 h-5')
+                            <button type="button"
+                                wire:click="removeItem({{ $item['id'] }})"
+                                title="Remove"
+                                class="bg-transparent hover:bg-red-50 p-2 rounded-lg">
+                                
+                                @svg('heroicon-o-trash', 'w-5 h-5 text-red-600')
                             </button>
                         </td>
                     </tr>
                 @empty
                     <tr>
                         <td colspan="4" class="text-center py-4 text-gray-500">
-                            No products added yet.
+                            Belum ada produk yang ditambahkan.
                         </td>
                     </tr>
                 @endforelse
@@ -44,7 +47,7 @@
         <div class="mt-4">
             <form wire:submit.prevent="generateBarcode">
                 <x-filament::button type="submit" icon="heroicon-o-printer">
-                    Generate Barcode PDF
+                    Buat PDF Barcode
                 </x-filament::button>
             </form>
         </div>

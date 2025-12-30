@@ -16,9 +16,11 @@ class CreateQuotation extends Page implements Forms\Contracts\HasForms
 {
     use Forms\Concerns\InteractsWithForms;
 
+    protected static ?string $navigationLabel = 'Buat Penawaran Harga';
+    protected static ?string $navigationGroup = 'Penawaran Harga';
+    protected static ?string $title = 'Buat Penawaran Harga';
     protected static ?string $navigationIcon = 'heroicon-o-document-plus';
-    protected static ?string $navigationLabel = 'Create Quotation';
-    protected static ?string $navigationGroup = 'Quotations';
+    
     protected static ?string $slug = 'create-quotation';
     protected static string $view = 'filament.pages.quotations.create-quotation';
 
@@ -48,7 +50,8 @@ class CreateQuotation extends Page implements Forms\Contracts\HasForms
     {
         return [
             Forms\Components\Select::make('product_id')
-                ->label('Search Product')
+                ->label('Cari Produk')
+                ->placeholder('Pilih Produk')
                 ->searchable()
                 ->getSearchResultsUsing(fn(string $query) => 
                     Product::query()
@@ -63,13 +66,14 @@ class CreateQuotation extends Page implements Forms\Contracts\HasForms
 
             Forms\Components\Grid::make(3)->schema([
                 Forms\Components\TextInput::make('reference')
-                    ->label('Reference')
+                    ->label('No. Referensi')
                     ->default(fn() => $this->reference)
                     ->disabled()
                     ->dehydrated(),
 
                 Forms\Components\Select::make('customer_id')
-                    ->label('Customer')
+                    ->label('Pelanggan')
+                    ->placeholder('Pilih Pelanggan')
                     ->options(Customer::pluck('customer_name', 'id'))
                     ->searchable()
                     ->reactive()
@@ -80,7 +84,7 @@ class CreateQuotation extends Page implements Forms\Contracts\HasForms
                     }),
 
                 Forms\Components\DatePicker::make('date')
-                    ->label('Date')
+                    ->label('Tanggal')
                     ->default(now())
                     ->required()
                     ->native(false),
@@ -183,7 +187,7 @@ class CreateQuotation extends Page implements Forms\Contracts\HasForms
     {
         if (empty($this->items)) {
             Notification::make()
-                ->title('Please add at least one product.')
+                ->title('Silakan tambahkan minimal satu produk.')
                 ->danger()
                 ->send();
             return;
@@ -248,7 +252,7 @@ class CreateQuotation extends Page implements Forms\Contracts\HasForms
         });
 
         Notification::make()
-            ->title('Quotation created successfully.')
+            ->title('Penawaran harga berhasil dibuat.')
             ->success()
             ->send();
 

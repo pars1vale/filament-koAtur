@@ -24,8 +24,8 @@ class Cashier extends Page implements HasForms
     use WithPagination;
 
     protected static ?string $navigationIcon = 'heroicon-o-calculator';
-    protected static ?string $title = 'Cashier';
-    protected static ?string $navigationGroup = 'POS Interface';
+    protected static ?string $title = 'Kasir';
+    protected static ?string $navigationGroup = 'Tampilan POS';
 
     protected static string $view = 'filament.pages.pos-interface.cashier';
 
@@ -99,7 +99,8 @@ class Cashier extends Page implements HasForms
                 ->schema([
                     // Start Search Bar
                     Forms\Components\TextInput::make('search')
-                        ->placeholder('Search product...')
+                        ->label('Cari')
+                        ->placeholder('Cari Produk...')
                         ->reactive()
                         ->afterStateUpdated(function ($state) {
                             $this->search = $state;
@@ -111,7 +112,8 @@ class Cashier extends Page implements HasForms
                         ->options(
                             $this->categories->pluck('category_name', 'id')
                         )
-                        ->placeholder('All Categories')
+                        ->label('Pilih Kategori')
+                        ->placeholder('Semua Kategori')
                         ->searchable()
                         ->reactive()
                         ->afterStateUpdated(function ($state) {
@@ -124,7 +126,7 @@ class Cashier extends Page implements HasForms
                 ->schema([
                 // Start Discount Input
                 Forms\Components\TextInput::make('discount_percent')
-                    ->label('Discount (%)')
+                    ->label('Diskon (%)')
                     ->numeric()
                     ->minValue(0)
                     ->maxValue(100)
@@ -135,8 +137,8 @@ class Cashier extends Page implements HasForms
 
                 // Start Customer Name Input
                 Forms\Components\TextInput::make('customer_name')
-                    ->label('Customer Name')
-                    ->placeholder('Enter customer name...')
+                    ->label('Nama Pelanggan')
+                    ->placeholder('Masukkan nama pelanggan...')
                     ->reactive()
                     ->afterStateUpdated(fn ($state) => $this->customer_name = $state),
                 // End Customer Name Input

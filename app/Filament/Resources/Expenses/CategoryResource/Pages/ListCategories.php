@@ -15,7 +15,7 @@ class ListCategories extends ListRecords
         return [
             Actions\CreateAction::make()
             ->modal(true)
-            ->modalHeading('Create Expenses Category')
+            ->modalHeading('Buat Kategori Pengeluaran')
             ->modalWidth('lg'),
         ];
     }

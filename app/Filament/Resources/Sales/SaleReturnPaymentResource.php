@@ -24,6 +24,7 @@ class SaleReturnPaymentResource extends Resource
     protected static ?string $model = SaleReturnPayment::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
+    protected static ?string $navigationLabel = 'Pengembalian Pembayaran';
     protected static ?string $navigationGroup = 'Sales Return';
     protected static ?int $navigationSort = 2;
 
@@ -35,7 +36,7 @@ class SaleReturnPaymentResource extends Resource
         return $form
             ->schema([
                 Select::make('sale_return_id')
-                    ->label('Sale Return')
+                    ->label('Retur Penjualan')
                     ->searchable()
                     ->preload()
                     ->relationship('sale_return', 'reference')
@@ -55,21 +56,24 @@ class SaleReturnPaymentResource extends Resource
                     }),
 
                 TextInput::make('amount')
+                    ->label('Jumlah')
                     ->numeric()
                     ->required()
                     ->minValue(0)
                     ->reactive(),
 
                 DatePicker::make('date')
+                    ->label('Tanggal')
                     ->required()
                     ->default(now()),
 
                 TextInput::make('reference')
-                    ->label('Payment Reference')
+                    ->label('Referensi Pembayaran')
                     ->reactive()
                     ->dehydrated(),
 
                 Select::make('payment_method')
+                    ->label('Metode Pembayaran')
                     ->options([
                         'cash'        => 'Cash',
                         'credit_card' => 'Credit Card',
@@ -81,6 +85,8 @@ class SaleReturnPaymentResource extends Resource
                     ->required(),
 
                 Textarea::make('note')
+                    ->label('Catatan')
+                    ->placeholder('Catatan (opsional)')
                     ->nullable()
                     ->columnSpanFull(),
             ]);
@@ -90,13 +96,28 @@ class SaleReturnPaymentResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('id')->sortable(),
-                TextColumn::make('reference')->searchable(),
-                TextColumn::make('sale_return.reference')->label('Sale Return')->sortable()->searchable(),
-                TextColumn::make('sale_return.customer.customer_name')->label('Customer')->searchable(),
-                TextColumn::make('amount')->money('idr', true),
-                TextColumn::make('payment_method')->badge(),
-                TextColumn::make('date')->date(),
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable(),
+                TextColumn::make('reference')
+                    ->label('No. Referensi')
+                    ->searchable(),
+                TextColumn::make('sale_return.reference')
+                    ->label('Retur Penjualan')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('sale_return.customer.customer_name')
+                    ->label('Pelanggan')
+                    ->searchable(),
+                TextColumn::make('amount')
+                    ->label('Jumlah')
+                    ->money('idr', true),
+                TextColumn::make('payment_method')
+                    ->label('Metode Pembayaran')
+                    ->badge(),
+                TextColumn::make('date')
+                    ->label('Tanggal')
+                    ->date(),
             ])
             ->filters([
                 //

@@ -9,6 +9,7 @@ use Filament\Resources\Pages\EditRecord;
 class EditCurrencies extends EditRecord
 {
     protected static string $resource = CurrenciesResource::class;
+    protected static ?string $title = 'Ubah Mata Uang';
 
     protected function getHeaderActions(): array
     {

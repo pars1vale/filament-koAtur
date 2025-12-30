@@ -23,6 +23,9 @@ class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
+    protected static ?string $navigationLabel = 'Kategori';
+    protected static ?string $navigationGroup = 'Pengeluaran';
+    protected static ?int $navigationSort = 1;
     protected static ?string $navigationIcon = 'heroicon-o-tag';
 
     // Grouping to Expenses menu
@@ -42,11 +45,11 @@ class CategoryResource extends Resource
         return $form
             ->schema([
                 TextInput::make('category_name')
-                    ->label('Category Name')
+                    ->label('Nama Kategori')
                     ->required()
                     ->maxLength(50),
                 Textarea::make('category_description')
-                    ->label('Category Description')
+                    ->label('Deskripsi Kategori')
                     ->nullable()
                     ->maxLength(255),
             ]);
@@ -58,12 +61,12 @@ class CategoryResource extends Resource
             ->columns([
                 TextColumn::make('category_name')
                     ->searchable()
-                    ->label('Category Name'),
+                    ->label('Nama Kategori'),
                 TextColumn::make('category_description')
-                    ->label('Category Description')
+                    ->label('Deskripsi Kategori')
                     ->wrap(),
                 TextColumn::make('expenses_sum_amount')
-                    ->label('Expenses Count')
+                    ->label('Jumlah Pengeluaran')
                     ->sortable(),
             ])
             ->filters([

@@ -19,14 +19,9 @@ class UnitsResource extends Resource
     protected static ?string $model = Unit::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-scale';
-    public static function getNavigationGroup(): ?string
-    {
-        return 'Settings';
-    }
-    public static function getNavigationSort(): ?int
-    {
-        return 3;
-    }
+    protected static ?string $navigationLabel = 'Satuan';
+    protected static ?string $navigationGroup = 'Pengaturan';
+    protected static ?int $navigationSort = 2;
 
     // public static function isScopedToTenant(): bool
     // {
@@ -38,15 +33,19 @@ class UnitsResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label('Nama')
                     ->required()
                     ->maxLength(50),
                 Forms\Components\TextInput::make('short_name')
+                    ->label('Singkatan')
                     ->required()
                     ->maxLength(10),
                 Forms\Components\TextInput::make('operator')
+                    ->label('Operator')
                     ->required()
                     ->maxLength(10),
                 Forms\Components\TextInput::make('operation_value')
+                    ->label('Nilai Operasi')
                     ->required()
                     ->maxLength(10),
             ]);
@@ -56,10 +55,14 @@ class UnitsResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('short_name'),
-                Tables\Columns\TextColumn::make('operator'),
-                Tables\Columns\TextColumn::make('operation_value'),
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Nama'),
+                Tables\Columns\TextColumn::make('short_name')
+                    ->label('Singkatan'),
+                Tables\Columns\TextColumn::make('operator')
+                    ->label('Operator'),
+                Tables\Columns\TextColumn::make('operation_value')
+                    ->label('Nilai Operasi'),
             ])
             ->filters([
                 //

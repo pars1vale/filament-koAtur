@@ -27,7 +27,7 @@ class SaleResource extends Resource
     protected static ?string $model = Sale::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
-
+    protected static ?string $navigationLabel = 'Penjualan';
     protected static ?string $navigationGroup = 'Sales';
     protected static ?int $navigationSort = 1;
 
@@ -140,7 +140,7 @@ class SaleResource extends Resource
         return $form
             ->schema([
                 TextInput::make('reference')
-                    ->label('Reference')
+                    ->label('No. Referensi')
                     ->readOnly()
                     ->dehydrated(true)
                     ->placeholder(function () {
@@ -150,25 +150,27 @@ class SaleResource extends Resource
                     }),
 
                 Select::make('customer_id')
-                    ->label('Customer')
+                    ->label('Pelanggan')
                     ->relationship('customer', 'customer_name')
                     ->required()
                     ->live()
                     ->afterStateUpdated(fn ($state, $set, $get) => self::calculateGrandTotal($set, $get)),
 
                 DateTimePicker::make('date')
+                    ->label('Tanggal Penjualan')
                     ->default(now())
-                    ->required()
-                    ->label('Sale Date'),
+                    ->required(),
 
-                Section::make('Product Details')
+                Section::make('Detail Produk')
                     ->schema([
                         Repeater::make('details')
+                            ->label('Detail Produk')
                             ->relationship('product_details')
                             ->schema([
                                 Hidden::make('id'),
 
                                 Select::make('product_id')
+                                    ->label('Produk')
                                     ->relationship('product', 'product_name')
                                     ->preload()
                                     ->searchable()
@@ -191,10 +193,11 @@ class SaleResource extends Resource
                                     }),
 
                                 TextInput::make('product_code')
-                                    ->label('Product Code')
+                                    ->label('Kode Produk')
                                     ->readOnly(),
 
                                 TextInput::make('quantity')
+                                    ->label('Jumlah')
                                     ->numeric()
                                     ->default(1)
                                     ->required()
@@ -208,13 +211,14 @@ class SaleResource extends Resource
                                     }),
 
                                 TextInput::make('unit_price')
+                                    ->label('Harga Satuan')
                                     ->numeric()
                                     ->required()
                                     ->readOnly()
                                     ->default(0),
 
                                 TextInput::make('product_discount_amount')
-                                    ->label('Discount')
+                                    ->label('Diskon')
                                     ->numeric()
                                     ->default(0)
                                     ->live()
@@ -227,6 +231,7 @@ class SaleResource extends Resource
                                     }),
 
                                 Select::make('product_discount_type')
+                                    ->label('Tipe Diskon Produk')
                                     ->options([
                                         'fixed' => 'Fixed',
                                         'percent' => 'Percent',
@@ -242,13 +247,14 @@ class SaleResource extends Resource
                                     }),
 
                                 TextInput::make('product_tax_amount')
-                                    ->label('Tax Amount')
+                                    ->label('Total Pajak')
                                     ->numeric()
                                     ->default(0)
                                     ->readOnly()
                                     ->dehydrated(true),
 
                                 TextInput::make('sub_total')
+                                    ->label('Subtotal')
                                     ->numeric()
                                     ->default(0)
                                     ->readOnly()
@@ -256,7 +262,7 @@ class SaleResource extends Resource
                                     ->columnSpanFull(),
                             ])
                             ->columns(3)
-                            ->addActionLabel('Add Product')
+                            ->addActionLabel('Tambah Produk')
                             ->live()
                             ->afterStateUpdated(function ($state, $set, $get) {
                                 self::calculateGrandTotal($set, $get);
@@ -269,49 +275,49 @@ class SaleResource extends Resource
                     ->collapsed(false),
 
                 // Global Discounts and Taxes
-                Section::make('Global Adjustments')
+                Section::make('Penyesuaian Global')
                     ->schema([
                         TextInput::make('tax_percentage')
+                            ->label('Persentase Pajak (%)')
                             ->numeric()
                             ->default(0)
-                            ->label('Tax Percentage (%)')
                             ->live()
                             ->afterStateUpdated(fn ($state, $set, $get) => self::calculateGrandTotal($set, $get)),
 
                         TextInput::make('tax_amount')
+                            ->label('Total Pajak')
                             ->numeric()
                             ->readOnly()
-                            ->label('Tax Amount')
                             ->dehydrated(true),
 
                         TextInput::make('discount_percentage')
+                            ->label('Tarif Diskon (%)')
                             ->numeric()
                             ->default(0)
-                            ->label('Discount Percentage (%)')
                             ->live()
                             ->afterStateUpdated(fn ($state, $set, $get) => self::calculateGrandTotal($set, $get)),
 
                         TextInput::make('discount_amount')
+                            ->label('Total Diskon')
                             ->numeric()
                             ->readOnly()
-                            ->label('Discount Amount')
                             ->dehydrated(true),
                     ])
                     ->columns(2),
 
                 // Totals Section
-                Section::make('Totals')
+                Section::make('Total')
                     ->schema([
                         TextInput::make('total_amount')
-                            ->label('Total Amount')
+                            ->label('Total Keseluruhan')
                             ->numeric()
                             ->readOnly()
                             ->dehydrated(true)
                             ->prefix('IDR'),
 
                         TextInput::make('paid_amount')
+                            ->label('Jumlah Dibayar')
                             ->numeric()
-                            ->label('Paid Amount')
                             ->required()
                             ->default(0)
                             ->live(onBlur: true)
@@ -319,7 +325,7 @@ class SaleResource extends Resource
                             ->prefix('IDR'),
 
                         TextInput::make('due_amount')
-                            ->label('Due Amount')
+                            ->label('Sisa Bayar')
                             ->numeric()
                             ->readOnly()
                             ->dehydrated(true)
@@ -331,28 +337,28 @@ class SaleResource extends Resource
                 Section::make('Status')
                     ->schema([
                         Select::make('status')
-                            ->label('Sale Status')
+                            ->label('Status Penjualan')
                             ->options([
                                 'pending' => 'Pending',
-                                'completed' => 'Completed',
-                                'cancelled' => 'Cancelled',
+                                'completed' => 'Selesai',
+                                'cancelled' => 'Dibatalkan',
                             ])
                             ->default('pending')
                             ->required(),
 
                         Select::make('payment_status')
-                            ->label('Payment Status')
+                            ->label('Status Pembayaran')
                             ->options([
-                                'unpaid' => 'Unpaid',
-                                'paid' => 'Paid',
-                                'partial' => 'Partial',
+                                'unpaid' => 'Belum Dibayar',
+                                'paid' => 'Sudah Dibayar',
+                                'partial' => 'Dibayar Sebagian',
                             ])
                             ->default('unpaid')
                             ->required()
                             ->dehydrated(),
 
                         Select::make('payment_method')
-                            ->label('Payment Method')
+                            ->label('Metode Pembayaran')
                             ->options([
                                 'cash' => 'Cash',
                                 'credit_card' => 'Credit Card',
@@ -366,6 +372,8 @@ class SaleResource extends Resource
                     ->columns(3),
 
                 Textarea::make('note')
+                    ->label('Catatan')
+                    ->placeholder('Catatan (opsional)')
                     ->nullable()
                     ->columnSpanFull(),
             ]);
@@ -375,14 +383,29 @@ class SaleResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('reference')->searchable(),
-                TextColumn::make('customer.customer_name')->searchable(),
-                TextColumn::make('date'),
-                TextColumn::make('status')->badge(),
-                TextColumn::make('payment_status')->badge(),
-                TextColumn::make('paid_amount')->money('idr'),
-                TextColumn::make('total_amount')->money('idr'),
-                TextColumn::make('due_amount')->money('idr'),
+                TextColumn::make('reference')
+                    ->label('No. Referensi')
+                    ->searchable(),
+                TextColumn::make('customer.customer_name')
+                    ->label('Pelanggan')
+                    ->searchable(),
+                TextColumn::make('date')
+                    ->label('Tanggal'),
+                TextColumn::make('status')
+                    ->label('Status')
+                    ->badge(),
+                TextColumn::make('payment_status')
+                    ->label('Status Pembayaran')
+                    ->badge(),
+                TextColumn::make('paid_amount')
+                    ->label('Jumlah Dibayar')
+                    ->money('idr'),
+                TextColumn::make('total_amount')
+                    ->label('Total Keseluruhan')
+                    ->money('idr'),
+                TextColumn::make('due_amount')
+                    ->label('Sisa Bayar')
+                    ->money('idr'),
             ])
             ->filters([
                 //

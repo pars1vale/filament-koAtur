@@ -19,6 +19,7 @@ class EditQuotation extends Page implements Forms\Contracts\HasForms
 
     protected static string $resource = QuotationResource::class;
 
+    protected static ?string $title = 'Ubah Penawaran Harga';
     protected static string $view = 'filament.pages.quotations.edit-quotation';
 
     public $quotation_id;
@@ -78,7 +79,8 @@ class EditQuotation extends Page implements Forms\Contracts\HasForms
     {
         return [
             Forms\Components\Select::make('product_id')
-                ->label('Search Product')
+                ->label('Cari Produk')
+                ->placeholder('Pilih Produk')
                 ->searchable()
                 ->getSearchResultsUsing(fn(string $query) => 
                     Product::query()
@@ -93,13 +95,14 @@ class EditQuotation extends Page implements Forms\Contracts\HasForms
 
             Forms\Components\Grid::make(3)->schema([
                 Forms\Components\TextInput::make('reference')
-                    ->label('Reference')
+                    ->label('No. Referensi')
                     ->default(fn() => $this->reference)
                     ->disabled()
                     ->dehydrated(),
 
                 Forms\Components\Select::make('customer_id')
-                    ->label('Customer')
+                    ->label('Pelanggan')
+                    ->placeholder('Pilih Pelanggan')
                     ->options(Customer::pluck('customer_name', 'id'))
                     ->searchable()
                     ->reactive()
@@ -110,7 +113,7 @@ class EditQuotation extends Page implements Forms\Contracts\HasForms
                     }),
 
                 Forms\Components\DatePicker::make('date')
-                    ->label('Date')
+                    ->label('Tanggal')
                     ->default(fn() => $this->date)
                     ->required()
                     ->native(false),
@@ -192,7 +195,7 @@ class EditQuotation extends Page implements Forms\Contracts\HasForms
     {
         if (empty($this->items)) {
             Notification::make()
-                ->title('Please add at least one product.')
+                ->title('Silakan tambahkan minimal satu produk.')
                 ->danger()
                 ->send();
             return;
@@ -263,7 +266,7 @@ class EditQuotation extends Page implements Forms\Contracts\HasForms
         });
 
         Notification::make()
-            ->title('Quotation updated successfully.')
+            ->title('Penawaran harga berhasil diperbarui.')
             ->success()
             ->send();
 

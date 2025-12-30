@@ -18,8 +18,8 @@ class SalesReport extends Page implements Tables\Contracts\HasTable, Forms\Contr
     use Forms\Concerns\InteractsWithForms;
 
     protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
-    protected static ?string $title = 'Sales Report';
-    protected static ?string $navigationGroup = 'Reports';
+    protected static ?string $title = 'Laporan Penjualan';
+    protected static ?string $navigationGroup = 'Laporan';
     protected static ?int $navigationSort = 3;
 
     protected static string $view = 'filament.pages.reports.sales-report';
@@ -35,10 +35,15 @@ class SalesReport extends Page implements Tables\Contracts\HasTable, Forms\Contr
         return [
             Forms\Components\Grid::make(3)
                 ->schema([
-                    DatePicker::make('start_date')->label('Start Date')->reactive(),
-                    DatePicker::make('end_date')->label('End Date')->reactive(),
+                    DatePicker::make('start_date')
+                        ->label('Tanggal Mulai')
+                        ->reactive(),
+                    DatePicker::make('end_date')
+                        ->label('Tanggal Selesai')
+                        ->reactive(),
                     Select::make('customer_id')
-                        ->label('Customer')
+                        ->label('Pelanggan')
+                        ->placeholder('Pilih Opsi')
                         ->options(Customer::pluck('customer_name', 'id'))
                         ->searchable()
                         ->reactive(),
@@ -47,18 +52,20 @@ class SalesReport extends Page implements Tables\Contracts\HasTable, Forms\Contr
                 ->schema([
                     Select::make('status')
                         ->label('Status')
+                        ->placeholder('Pilih Opsi')
                         ->options([
                             'pending' => 'Pending',
-                            'completed' => 'Completed',
-                            'cancelled' => 'Cancelled',
+                            'completed' => 'Selesai',
+                            'cancelled' => 'Dibatalkan',
                         ])
                         ->reactive(),
                     Select::make('payment_status')
-                        ->label('Payment Status')
+                        ->label('Status Pembayaran')
+                        ->placeholder('Pilih Opsi')
                         ->options([
-                            'unpaid' => 'Unpaid',
-                            'paid' => 'Paid',
-                            'partial' => 'Partial',
+                            'unpaid' => 'Belum Dibayar',
+                            'paid' => 'Sudah Dibayar',
+                            'partial' => 'Dibayar Sebagian',
                         ])
                         ->reactive(),
                 ]),
@@ -71,15 +78,15 @@ class SalesReport extends Page implements Tables\Contracts\HasTable, Forms\Contr
             ->query(fn() => $this->getFilteredQuery())
             ->columns([
                 TextColumn::make('date')
-                    ->label('Date')
+                    ->label('Tanggal')
                     ->date('d M Y'),
 
                 TextColumn::make('reference')
-                    ->label('Reference')
+                    ->label('No. Referensi')
                     ->searchable(),
 
                 TextColumn::make('customer.customer_name')
-                    ->label('Customer'),
+                    ->label('Pelanggan'),
 
                 TextColumn::make('status')
                     ->label('Status')
@@ -90,16 +97,16 @@ class SalesReport extends Page implements Tables\Contracts\HasTable, Forms\Contr
                     ->money('IDR'),
 
                 TextColumn::make('paid_amount')
-                    ->label('Paid')
+                    ->label('Sudah Dibayar')
                     ->money('IDR'),
 
                 TextColumn::make('due_amount')
-                    ->label('Due')
+                    ->label('Sisa Bayar')
                     ->money('IDR')
                     ->color(fn ($record) => $record->due_amount > 0 ? 'danger' : 'success'),
 
                 TextColumn::make('payment_status')
-                    ->label('Payment Status')
+                    ->label('Status Pembayaran')
                     ->badge(),
             ]);
     }

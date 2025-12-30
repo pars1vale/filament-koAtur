@@ -39,18 +39,18 @@ class AdminPanelProvider extends PanelProvider
 
             // Ordering Navigation Group
             ->navigationGroups([
-                'Products',
-                'Stock Adjustments',
-                'Quotations',
+                'Produk',
+                'Penyesuaian Stok',
+                'Penawaran Harga',
                 'Purchases',
                 'Purchases Return',
                 'Sales',
                 'Sales Return',
                 'Parties',
-                'Reports',
+                'Laporan',
                 'Expenses',
-                'POS Interface',
-                'Settings',
+                'Tampilan POS',
+                'Pengaturan',
                 'User Management'
             ])
             // Products Resource Path

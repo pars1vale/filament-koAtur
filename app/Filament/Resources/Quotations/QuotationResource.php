@@ -3,46 +3,38 @@
 namespace App\Filament\Resources\Quotations;
 
 use App\Filament\Resources\Quotations\QuotationResource\Pages;
-use App\Filament\Resources\Quotations\QuotationResource\RelationManagers;
 use App\Models\Quotations\Quotation;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class QuotationResource extends Resource
 {
     protected static ?string $model = Quotation::class;
 
+    protected static ?string $navigationLabel = 'Daftar Penawaran Harga';
+    protected static ?string $navigationGroup = 'Penawaran Harga';
+    
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
-    protected static ?string $navigationLabel = 'All Quotations';
-    protected static ?string $navigationGroup = 'Quotations';
-
-    public static function form(Form $form): Form
-    {
-        //
-    }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('date')
-                    ->label('Date')
+                    ->label('Tanggal')
                     ->searchable()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('reference')
-                    ->label('Reference')
+                    ->label('No. Referensi')
                     ->searchable()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('customer_name')
-                    ->label('Customer')
+                    ->label('Pelanggan')
                     ->searchable()
                     ->sortable(),
 
@@ -54,18 +46,20 @@ class QuotationResource extends Resource
                     ->label('Status'),
 
                 Tables\Columns\TextColumn::make('total_amount')
-                    ->label('Price')
+                    ->label('Harga')
                     ->money('idr'),
             ])
             ->filters([])
             ->actions([
                 Tables\Actions\Action::make('view')
-                    ->label('View')
+                    ->label('Lihat')
                     ->icon('heroicon-o-eye')
                     ->url(fn ($record) => url('/admin/' . Auth::user()->outlets()->first()->id . '/quotations/quotations/' . $record->id . '/view-quotation'))
                     ->color('gray'),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->label('Ubah'),
+                Tables\Actions\DeleteAction::make()
+                    ->label('Hapus'),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

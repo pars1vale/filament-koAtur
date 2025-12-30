@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class EditSaleReturn extends EditRecord
 {
     protected static string $resource = SaleReturnResource::class;
+    protected static ?string $title = 'Ubah Retur Penjualan';
 
     protected function afterSave(): void
     {

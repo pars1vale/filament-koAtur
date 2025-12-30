@@ -11,6 +11,7 @@ use Filament\Facades\Filament;
 class CreateSale extends CreateRecord
 {
     protected static string $resource = SaleResource::class;
+    protected static ?string $title = 'Buat Penjualan';
 
     protected function afterCreate(): void
     {

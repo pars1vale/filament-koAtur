@@ -16,8 +16,9 @@ class AdjustStock extends Page implements Forms\Contracts\HasForms
     use Forms\Concerns\InteractsWithForms;
 
     protected static ?string $navigationIcon = 'heroicon-o-adjustments-horizontal';
-    protected static ?string $navigationLabel = 'Create Adjustment';
-    protected static ?string $navigationGroup = 'Stock Adjustments';
+    protected static ?string $navigationLabel = 'Buat Penyesuaian';
+    protected static ?string $navigationGroup = 'Penyesuaian Stok';
+    protected static ?string $title = 'Sesuaikan Stok';
     protected static string $view = 'filament.pages.adjustments.adjust-stock';
 
     public $product_id;
@@ -32,7 +33,7 @@ class AdjustStock extends Page implements Forms\Contracts\HasForms
     {
         return [
             Forms\Components\Select::make('product_id')
-                ->label('Search Product')
+                ->label('Cari Produk')
                 ->searchable()
                 ->getSearchResultsUsing(
                     fn(string $query) =>
@@ -60,7 +61,7 @@ class AdjustStock extends Page implements Forms\Contracts\HasForms
                 
             Forms\Components\Group::make([
                 Forms\Components\TextInput::make('reference')
-                    ->label('Reference Code')
+                    ->label('Kode Referensi')
                     ->disabled()
                     ->default(function () {
                         $lastAdjustment = Adjustment::orderBy('id', 'desc')->first();
@@ -76,7 +77,7 @@ class AdjustStock extends Page implements Forms\Contracts\HasForms
                     }),
 
                 Forms\Components\DatePicker::make('adjustment_date')
-                    ->label('Date')
+                    ->label('Tanggal')
                     ->default(now())
                     ->required()
                     ->native(false),
@@ -142,7 +143,7 @@ class AdjustStock extends Page implements Forms\Contracts\HasForms
         $this->form->fill();
 
         Notification::make()
-            ->title('Stock adjustment created successfully')
+            ->title('Penyesuaian stok berhasil dibuat')
             ->success()
             ->send();
     }

@@ -9,11 +9,14 @@ use Filament\Resources\Pages\ListRecords;
 class ListProducts extends ListRecords
 {
     protected static string $resource = ProductResource::class;
+    protected static ?string $title = 'Produk';
 
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+                ->label('Produk Baru')
+                ->modalHeading('Buat Produk'),
         ];
     }
 }
