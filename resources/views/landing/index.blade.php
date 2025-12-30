@@ -199,11 +199,11 @@
                 <p class="text-gray-600 text-lg">Pilih paket yang sesuai kebutuhan bisnis Anda</p>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 place-items-center max-w-6xl mx-auto">
 
                 <!-- Basic Plan -->
                 <div
-                    class="p-8 bg-white rounded-2xl shadow-md border flex flex-col justify-between hover:shadow-xl transition">
+                    class="lg:col-start-2 max-w-md w-full p-8 bg-white rounded-2xl shadow-md border flex flex-col justify-between hover:shadow-xl transition">
                     <div>
                         <h3 class="text-xl font-bold">Basic Plan</h3>
                         <p class="text-sm text-gray-600 mt-1 mb-6">Untuk toko kecil yang baru mulai</p>
@@ -234,7 +234,7 @@
                 </div>
 
                 <!-- Advance Plan -->
-                <div
+                {{-- <div
                     class="p-8 bg-white rounded-2xl shadow-lg border-2 border-blue-600 flex flex-col justify-between scale-[1.02]">
                     <div>
                         <span
@@ -268,10 +268,10 @@
                         class="mt-10 w-full py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition font-medium">
                         Mulai dengan Advance Plan
                     </button>
-                </div>
+                </div> --}}
 
                 <!-- Pro Plan -->
-                <div
+                {{-- <div
                     class="p-8 bg-white rounded-2xl shadow-md border flex flex-col justify-between hover:shadow-xl transition">
                     <div>
                         <h3 class="text-xl font-bold">Pro Plan</h3>
@@ -301,7 +301,7 @@
                         class="mt-10 w-full py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition font-medium">
                         Mulai dengan Pro Plan
                     </button>
-                </div>
+                </div> --}}
 
             </div>
         </div>
