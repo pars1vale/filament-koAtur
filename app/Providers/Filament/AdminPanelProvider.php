@@ -71,7 +71,15 @@ class AdminPanelProvider extends PanelProvider
             // Reports Resource Path
             ->discoverResources(in: app_path('Filament/Resources/Reports'), for: 'App\\Filament\\Resources\\Reports')
 
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
+            ->discoverResources(in: app_path('Filament/Resources/Outlets'), for: 'App\\Filament\\Resources\\Outlets')
+            ->discoverResources(in: app_path('Filament/Resources/Users'), for: 'App\\Filament\\Resources\\Users')
+            ->discoverResources(in: app_path('Filament/Resources/Sales'), for: 'App\\Filament\\Resources\\Sales')
+            ->discoverResources(in: app_path('Filament/Resources/Quotations'), for: 'App\\Filament\\Resources\\Quotations')
+
+
+
+            // disabling global resource
+            // ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
                 Pages\Dashboard::class,

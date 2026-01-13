@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\Users;
+namespace App\Filament\Resources\System\Users;
 
-use App\Filament\Resources\Users\UserResource\Pages;
-use App\Filament\Resources\Users\UserResource\RelationManagers;
+use App\Filament\Resources\System\Users\UserResource\Pages;
+use App\Filament\Resources\System\Users\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
