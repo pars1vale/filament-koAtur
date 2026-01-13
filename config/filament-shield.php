@@ -6,7 +6,7 @@ return [
         'slug' => 'shield/roles',
         'navigation_sort' => -1,
         'navigation_badge' => true,
-        'navigation_group' => 'Users',
+        'navigation_group' => 'Kelola Pengguna',
         'sub_navigation_position' => null,
         'is_globally_searchable' => false,
         'show_model_path' => true,
@@ -23,7 +23,7 @@ return [
 
     'super_admin' => [
         'enabled' => true,
-        'name' => 'owner',
+        'name' => 'super_admin',
         'define_via_gate' => true,
         'intercept_gate' => 'before', // after
     ],
@@ -89,6 +89,10 @@ return [
 
     'register_role_policy' => [
         'enabled' => true,
+    ],
+
+    'prefixes' => [
+        'panel' => true,
     ],
 
 ];

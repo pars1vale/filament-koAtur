@@ -25,7 +25,7 @@ class OwnerResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-user-circle';
 
     protected static ?string $navigationLabel = 'Pengguna';
-    protected static ?string $navigationGroup = 'User Management';
+    protected static ?string $navigationGroup = 'Kelola Pengguna';
     protected static ?int $navigationSort = 3;
 
     public static function isScopedToTenant(): bool
@@ -35,11 +35,17 @@ class OwnerResource extends Resource
 
     public static function canAccess(): bool
     {
-        return Auth::user()->hasRole('owner');
+        return Auth::user()?->hasAnyRole(['super_admin', 'owner']) ?? false;
     }
 
     public static function getEloquentQuery(): Builder
     {
+        $user = Auth::user();
+
+        if ($user->hasRole('super_admin')) {
+            return parent::getEloquentQuery();
+        }
+
         return parent::getEloquentQuery()
             ->whereHas('outlets', function ($query) {
                 $query->whereKey(Filament::getTenant()->id);

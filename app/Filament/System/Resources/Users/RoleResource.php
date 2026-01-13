@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Users;
+namespace App\Filament\System\Resources;
 
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use BezhanSalleh\FilamentShield\Forms\ShieldSelectAllToggle;
@@ -15,7 +15,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Unique;
@@ -50,11 +49,6 @@ class RoleResource extends Resource implements HasShieldPermissions
             'delete',
             'delete_any',
         ];
-    }
-
-    public static function canAccess(): bool
-    {
-        return Auth::user()->hasRole('super_admin');
     }
 
     public static function form(Form $form): Form

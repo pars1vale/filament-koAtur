@@ -29,18 +29,18 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-    $user = Auth::user();
+        $user = Auth::user();
 
-    $outlet = $user->outlets()->first();
+        $outlet = $user->outlets()->first();
 
-    if (!$outlet) {
-        Auth::logout();
-        abort(403, 'User tidak memiliki outlet.');
-    }
+        if (!$outlet) {
+            Auth::logout();
+            abort(403, 'User tidak memiliki outlet.');
+        }
 
-    return redirect()->route('filament.admin.pages.dashboard', [
-        'tenant' => $outlet->id,
-    ]);
+        return redirect()->route('filament.admin.pages.dashboard', [
+            'tenant' => $outlet->id,
+        ]);
     }
 
     /**

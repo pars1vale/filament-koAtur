@@ -15,7 +15,7 @@ class OutletPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->can('view_any_outlets::outlet');
+        return $user->can('view_any_outlets::tenant');
     }
 
     /**
@@ -23,7 +23,7 @@ class OutletPolicy
      */
     public function view(User $user, Outlet $outlet): bool
     {
-        return $user->can('view_outlets::outlet');
+        return $user->can('view_outlets::tenant');
     }
 
     /**
@@ -31,7 +31,7 @@ class OutletPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create_outlets::outlet');
+        return $user->can('create_outlets::tenant');
     }
 
     /**
@@ -39,7 +39,7 @@ class OutletPolicy
      */
     public function update(User $user, Outlet $outlet): bool
     {
-        return $user->can('update_outlets::outlet');
+        return $user->can('update_outlets::tenant');
     }
 
     /**
@@ -47,7 +47,7 @@ class OutletPolicy
      */
     public function delete(User $user, Outlet $outlet): bool
     {
-        return $user->can('delete_outlets::outlet');
+        return $user->can('delete_outlets::tenant');
     }
 
     /**
@@ -55,7 +55,7 @@ class OutletPolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_outlets::outlet');
+        return $user->can('delete_any_outlets::tenant');
     }
 
     /**
@@ -63,7 +63,7 @@ class OutletPolicy
      */
     public function forceDelete(User $user, Outlet $outlet): bool
     {
-        return $user->can('force_delete_outlets::outlet');
+        return $user->can('force_delete_outlets::tenant');
     }
 
     /**
@@ -71,7 +71,7 @@ class OutletPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_outlets::outlet');
+        return $user->can('force_delete_any_outlets::tenant');
     }
 
     /**
@@ -79,7 +79,7 @@ class OutletPolicy
      */
     public function restore(User $user, Outlet $outlet): bool
     {
-        return $user->can('restore_outlets::outlet');
+        return $user->can('restore_outlets::tenant');
     }
 
     /**
@@ -87,7 +87,7 @@ class OutletPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_outlets::outlet');
+        return $user->can('restore_any_outlets::tenant');
     }
 
     /**
@@ -95,7 +95,7 @@ class OutletPolicy
      */
     public function replicate(User $user, Outlet $outlet): bool
     {
-        return $user->can('replicate_outlets::outlet');
+        return $user->can('replicate_outlets::tenant');
     }
 
     /**
@@ -103,6 +103,6 @@ class OutletPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_outlets::outlet');
+        return $user->can('reorder_outlets::tenant');
     }
 }

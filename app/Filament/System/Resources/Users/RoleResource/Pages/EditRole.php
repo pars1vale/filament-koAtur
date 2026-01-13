@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Users\RoleResource\Pages;
+namespace App\Filament\System\Resources\RoleResource\Pages;
 
 use BezhanSalleh\FilamentShield\Resources\RoleResource;
 use BezhanSalleh\FilamentShield\Support\Utils;

@@ -19,7 +19,7 @@ class TenantResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
 
-    protected static ?string $navigationGroup = 'User Management';
+    protected static ?string $navigationGroup = 'Kelola Pengguna';
 
     protected static ?string $modelLabel = 'Outlet';
 

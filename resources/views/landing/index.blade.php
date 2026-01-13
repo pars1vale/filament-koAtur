@@ -20,31 +20,17 @@
                 <a href="#" class="text-gray-600 hover:text-gray-900 transition">Fitur</a>
             </nav>
             <div class="flex items-center gap-3">
-                @if (Route::has('login'))
-                    @auth
-                        @php
-                            $tenant = auth()->user()->outlets()->first();
-                        @endphp
-
-                        <a href="{{ route('filament.admin.pages.dashboard', ['tenant' => $tenant?->id]) }}"
-                            class="px-6 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-gray-50 transition">
-                            Dashboard
-                        </a>
-                    @else
-                        <a href="{{ route('login') }}"
-                            class="px-6 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-gray-50 transition">
-                            Login
-                        </a>
-
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}"
-                                class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
-                                Sign up
-                            </a>
-                        @endif
-                    @endauth
-                    </nav>
-                @endif
+                @auth
+                    <a href="{{ url('/admin') }}"
+                        class="px-6 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-gray-50 transition">
+                        Dashboard
+                    </a>
+                @else
+                    <a href="{{ url('/admin/login') }}"
+                        class="px-6 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-gray-50 transition">
+                        Login
+                    </a>
+                @endauth
             </div>
         </div>
     </header>

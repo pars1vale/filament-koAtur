@@ -51,7 +51,7 @@ class AdminPanelProvider extends PanelProvider
                 'Expenses',
                 'Tampilan POS',
                 'Pengaturan',
-                'User Management'
+                'Kelola Pengguna'
             ])
             // Products Resource Path
             ->discoverResources(in: app_path('Filament/Resources/Products'), for: 'App\\Filament\\Resources\\Products')
@@ -141,11 +141,8 @@ class AdminPanelProvider extends PanelProvider
                 FilamentShieldPlugin::make(),
             ])
             ->authMiddleware([
-                // Authenticate::class,
-                BlockFilamentAuth::class
-            ])
-            ->plugins([
-                \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
+                Authenticate::class,
+                // BlockFilamentAuth::class
             ])
             ->tenant(Outlet::class);
     }

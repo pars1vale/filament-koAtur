@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\Outlets\OutletResource\Pages;
+namespace App\Filament\System\Resources\OutletResource\Pages;
 
-use App\Filament\Resources\Outlets\OutletResource;
+use App\Filament\System\Resources\OutletResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 

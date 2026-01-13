@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\Users;
+namespace App\Filament\System\Resources;
 
-use App\Filament\Resources\Users\UserResource\Pages;
-use App\Filament\Resources\Users\UserResource\RelationManagers;
+use App\Filament\System\Resources\UserResource\Pages;
+use App\Filament\System\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
@@ -15,30 +15,16 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-circle';
+    protected static ?string $navigationIcon = 'heroicon-o-user';
 
-    protected static ?string $modelLabel = 'All User';
-
-    public static function getNavigationGroup(): ?string
-    {
-        return 'Super Admin';
-    }
-
-    public static function isScopedToTenant(): bool
-    {
-        return false;
-    }
-
-    // public static function canAccess(): bool
-    // {
-    //     return Auth::user()->hasRole('superadmin');
-    // }
+    protected static ?string $navigationLabel = 'Pengguna';
+    protected static ?string $navigationGroup = 'Kelola Pengguna';
 
     public static function form(Form $form): Form
     {
@@ -53,8 +39,13 @@ class UserResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('password')
                     ->password()
-                    ->required()
-                    ->maxLength(255),
+                    ->revealable()
+                    ->nullable()
+                    ->helperText('Kosongkan jika tidak ingin mengubah password')
+                    ->dehydrated(fn($state) => filled($state))
+                    ->required(fn(string $operation) => $operation === 'create')
+                    ->maxLength(30)
+                    ->dehydrateStateUsing(fn($state) => Hash::make($state)),
                 Select::make('roles')
                     ->relationship('roles', 'name')
                     ->searchable()
@@ -88,7 +79,6 @@ class UserResource extends Resource
                     ->label('Role')
                     ->relationship('roles', 'name')
                     ->preload(),
-
                 SelectFilter::make('outlets')
                     ->label('Outlet')
                     ->relationship('outlets', 'name')

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\Outlets;
+namespace App\Filament\System\Resources;
 
-use App\Filament\Resources\Outlets\OutletResource\Pages;
-use App\Filament\Resources\Outlets\OutletResource\RelationManagers;
+use App\Filament\System\Resources\OutletResource\Pages;
+use App\Filament\System\Resources\OutletResource\RelationManagers;
 use App\Models\Outlet;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -19,11 +19,8 @@ class OutletResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
 
-    protected static ?string $navigationGroup = 'Super Admin';
-
-    protected static ?string $modelLabel = 'All Outlet';
-
-    public static bool $isScopedToTenant = false;
+    protected static ?string $navigationLabel = 'Outlet';
+    protected static ?string $navigationGroup = 'Kelola Pengguna';
 
     public static function form(Form $form): Form
     {
@@ -52,6 +49,7 @@ class OutletResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
